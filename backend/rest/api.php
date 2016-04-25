@@ -10,7 +10,7 @@ require_once("Valider.php");
 require_once("LogService/LogService.php");
 require_once("LogService/LogServiceImpl.php");
 
-$RootFolderName = "rb/backend";
+$RootFolderName = "selos/backend";
 
 require_once($_SERVER['DOCUMENT_ROOT']."/$RootFolderName/php/lib/swift_required.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/$RootFolderName/core/core.php");

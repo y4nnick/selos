@@ -1,7 +1,7 @@
 <?php
 
 if($_SERVER['SERVER_NAME'] == 'localhost'){
-    $RootFolderName = "rb/backend";
+    $RootFolderName = "selos/backend";
     require_once($_SERVER['DOCUMENT_ROOT']."/$RootFolderName/rest/api.php");
 }else{
     $RootFolderName = "backend";
