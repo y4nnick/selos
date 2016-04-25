@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT']."/rb/backend/rest/api.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/selos/backend/rest/api.php");
 
 class ImportService extends API
 {

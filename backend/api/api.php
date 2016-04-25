@@ -1,6 +1,6 @@
 <?php
 
-$RootFolderName = "rb/backend";
+$RootFolderName = "selos/backend";
 
 require_once($_SERVER['DOCUMENT_ROOT']."/$RootFolderName/core/core.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/$RootFolderName/core/class/Bewerb.php");

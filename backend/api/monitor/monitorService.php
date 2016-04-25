@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT']."/rb/backend/api/api.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/selos/backend/api/api.php");
 
 class MonitorService extends GENERIC_API
 {
