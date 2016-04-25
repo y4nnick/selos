@@ -122,9 +122,14 @@ class GENERIC_REST {
 
             case "PUT":
 
+              //  print_r(file_get_contents("php://input"));
+
+                $fileContent = file_get_contents("php://input");
+
                 //$this->_request = $this->sanitize(file_get_contents("php://input"));
-                if($filecontent = file_get_contents("php://input") !== false){
-                    $this->_request = $this->sanitize(file_get_contents("php://input"));
+               // if($filecontent = file_get_contents("php://input") !== false){
+                if(strlen($fileContent) != 0){
+                    $this->_request = $this->sanitize($fileContent);
                 }else{
 
                     if(!empty($_POST["data"])){
