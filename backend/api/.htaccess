@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-s
+RewriteRule ^([a-z]+)/(.*)$ $1/$1Service.php?request=$2 [QSA,NC,L]
+
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -s
+RewriteRule ^([a-z]+)/(.*)$ $1/$1Service.php [QSA,NC,L]

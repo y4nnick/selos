@@ -1,0 +1,6 @@
+{
+    "require": {
+        "google/apiclient": "^2.0.0@RC",
+        "guzzlehttp/guzzle": "~5.2"
+    }
+}
