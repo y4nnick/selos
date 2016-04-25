@@ -1,0 +1,22 @@
+.SlideUp {
+    transition: 0.25s linear all;
+    height: 300px;
+    overflow: hidden;
+}
+.SlideUp.ng-hide {
+    height:0;
+}
+
+.Fade {
+    transition: 0.25s linear all;
+    opacity: 1;
+}
+.Fade.ng-hide {
+    opacity: 0;
+}
+
+
+
+.ng-hide-add, .ng-hide-remove {
+    display: block !important;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+        <title>Rasenbeach 2016</title>
+
+        <!-- bootstrap -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css">
+        <link rel="stylesheet" href="assets/css/angular-toggle-switch.css">
+
+        <link rel="stylesheet" href="style.css">
+
+        <!-- AngularJS -->
+        <script src="bower_components/angular/angular1-4-9.js"></script>
+        <script src="assets/js/angular-mobile.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.js"></script>
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="bower_components/ng-busy/src/angular-busy.js"></script>
+        <script src="assets/js/angular.country-select.min.js"></script>
+        <script src="assets/js/angular-bootstrap-checkbox.js"></script>
+        <script src="assets/js/angular-toggle-switch.min.js"></script>
+       <script src="assets/js/ui-bootstrap-tpls-1.1.2.min.js"></script>
+
+       <!-- Angular Module and routes etc.-->
+        <script src="app/app.module.js"></script>
+        <script src="app/app.routes.js"></script>
+
+        <!-- Angular Controllers -->
+        <script src="app/components/teams/teamController.js"></script>
+        <script src="app/components/eingabe/eingabeController.js"></script>
+        <script src="app/components/home/homeController.js"></script>
+        <script src="app/components/gruppen/gruppenController.js"></script>
+        <script src="app/components/monitore/monitorController.js"></script>
+        <script src="app/components/monitorview/monitorviewController.js"></script>
+        <script src="app/components/custom/customController.js"></script>
+        <script src="app/shared/grouptable/grouptableController.js"></script>
+
+        <!-- Factorys -->
+        <script src="app/api/teamFactory.js"></script>
+        <script src="app/api/bewerbFactory.js"></script>
+        <script src="app/api/gruppeFactory.js"></script>
+        <script src="app/api/monitorFactory.js"></script>
+        <script src="app/api/monitoransichtFactory.js"></script>
+
+        <!-- Dragular -->
+        <link href='assets/css/dragular.css' rel='stylesheet' type='text/css' />
+        <script src='assets/js/dragular.js'></script>
+
+        <!-- Angular ngDialog-->
+        <script src="bower_components/ngDialog/js/ngDialog.js"></script>
+        <link href="bower_components/ngDialog/css/ngDialog.css" rel="stylesheet" type="text/css" >
+        <link href="bower_components/ngDialog/css/ngDialog-theme-default.css" rel="stylesheet" type="text/css" >
+
+        <script src="app/shared/bootstrapNavbar/bootstrapNavbarDirective.js"></script>
+
+
+        <!-- Sweet alert -->
+        <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="bower_components/sweetalert/dist/sweetalert.css">
+
+        <link rel="stylesheet" href="assets/css/font-awesome-4.5.0/css/font-awesome.min.css">
+
+        <link href="app/components/eingabe/animation.css" rel="stylesheet" type="text/css" >
+
+    </head>
+
+    <body ng-app="rb">
+        <bootstrap-navbar ng-if="!$root.monitorview"></bootstrap-navbar>
+        <div style="display:block; margin: 100px 0px 0px 0px;width: 100%;height: 100%" id="main-views" ui-view></div>
+    </body>
+</html>

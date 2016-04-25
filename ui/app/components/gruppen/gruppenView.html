@@ -1,0 +1,222 @@
+<link rel="stylesheet" type="text/css" href="style.css">
+<style>
+    .red{
+        background-color: lightcoral;
+    }
+    .moveup {
+        transition: 0.3s linear all;
+        height: 100%;
+        overflow: hidden;
+    }
+    .moveup.ng-hide {
+        height:0;
+    }
+    .box{
+        width: 100%;
+        height:50px;
+        border-top:1px solid lightgrey;
+        border-bottom:1px solid lightgrey;
+        margin-top: 0px;
+    }
+    .box > span{
+        font-size: 120%;
+        line-height: 50px;
+        margin-left: 10px;
+    }
+    .first {background: #f1f1f1
+    }
+    .borderbottom {border: 0px; border-bottom:1px solid lightgrey;}
+    .noborder {border: 0px}
+    .box > div      {   margin-top: 9px;margin-right: 10px}
+    .box > select   {   margin-top: 7px;margin-right: 10px}
+    .box > input    {   margin-top: 7px;margin-right: 10px}
+    .toggle-switch .switch-left  {   background: #4a9a42;height: 28px}
+    .toggle-switch .switch-right  {  height: 28px}
+
+</style>
+
+
+<div style="margin: 25px">
+    <uib-tabset>
+
+        <uib-tab ng-repeat="bewerb in bewerbe" select="selected(bewerb,$index)" active="active[$index]">
+            <uib-tab-heading>{{bewerb.name}}</uib-tab-heading>
+
+            <!-- Bewerb überschrift -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>{{selBewerb.name}} <small>{{selBewerb.teams_anwesend}}/{{selBewerb.teams}} Teams anwesend</small></h2>
+                </div>
+            </div>
+
+            <!-- Bewerb auslosung -->
+            <div  ng-hide="bewerb.ausgelost && !bewerb.erneutauslosen">
+
+                <!-- Überschrift -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Auslosen</h3>
+                    </div>
+                </div>
+
+                <!-- Auslosen Form -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="gruppenVerteilung">Gruppen Verteilung (Beistrich getrennt)</label>
+                            <input ng-model="gruppenVerteilung" type="text" class="form-control" id="gruppenVerteilung" placeholder="4,4,4,3">
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success" ng-click="auslosen(bewerb,gruppenVerteilung)">Auslosen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Druck Forms  -->
+            <div ng-show="bewerb.ausgelost">
+
+                <!-- Druck Überschrift -->
+                <div class="row" >
+                    <div class="col-md-12">
+                        <h3>Drucken</h3>
+                    </div>
+                </div>
+
+                <!-- Drucken -->
+                <div class="row">
+
+                    <!-- Raster Drucken -->
+                    <div class="col-md-4">
+
+                        <div class="box first">
+                            <span>Raster</span>
+                            <toggle-switch class="pull-right" ng-model="print.raster" ></toggle-switch>
+                        </div>
+
+                        <div class="box moveup noborder" ng-show="print.raster">
+                            <span>Hintergrund</span>
+                            <toggle-switch class="pull-right" ng-model="print.rasterBackground"></toggle-switch>
+                        </div>
+
+                        <div class="box moveup noborder" ng-show="print.raster">
+                            <span>Blatt Größe</span>
+                            <select ng-change="selectedBlatt(print.rasterblatt.selected)" style="width: 100px; display: inline" class="form-control pull-right" ng-model="print.rasterblatt.selected" ng-options="o as o for o in print.rasterblatt.options"></select>
+                        </div>
+
+                        <div class="box moveup borderbottom" ng-show="print.raster" >
+                            <span>Raster Größe</span>
+                            <select ng-disabled="(print.rasterblatt.selected == 'A4')" style="width: 100px; display: inline" class="form-control pull-right" ng-model="print.rastergroesse.selected" ng-options="o as o for o in print.rastergroesse.options"></select>
+                        </div>
+
+                    </div>
+
+                    <!-- Spiele Drucken -->
+                    <div class="col-md-4">
+
+                        <div class="box first">
+                            <span>Spiele</span>
+                            <toggle-switch class="pull-right" ng-model="print.spiele"></toggle-switch>
+                        </div>
+
+                        <div class="box moveup noborder" ng-show="print.spiele">
+                            <span>Hintergrund</span>
+                            <toggle-switch class="pull-right" ng-model="print.spieleBackground"></toggle-switch>
+                        </div>
+
+                        <div class="box moveup borderbottom" ng-show="print.spiele">
+                            <span>Info</span>
+                            <input style="width: 200px; display: inline" class="form-control pull-right" ng-model="print.spieleInfo"/>
+                        </div>
+
+                    </div>
+
+                    <!-- Druck Button -->
+                    <div class="col-md-4">
+                        <button class="btn" ng-click="druckAll(print)">Drucken</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Gruppen Teams -->
+            <div ng-repeat="gruppe in selBewerb.ownGruppe">
+
+                <!-- Gruppen Überschrift -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Gruppe {{gruppe.name}} <small>{{gruppe.ownTeam.length}} Teams</small></h3>
+                    </div>
+                </div>
+
+                <!-- Einzeln Drucken -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div ng-show="einzelnDrucken">
+                            <form class="form-inline" style="display: inline;">
+                                <button class="btn" style="display: inline;" ng-click="drucken(gruppe,gruppe.printRaster,gruppe.printSpiele,gruppe.printRasterBackground,gruppe.printSpieleBackground)">Drucken</button>
+                            </form>
+
+                            <form class="form-inline" style="display: inline;">
+                                <div class="btn-group">
+                                    <label class="btn btn-primary" ng-model="gruppe.printRaster" uib-btn-checkbox>Raster</label>
+                                    <label class="btn btn-primary" ng-model="gruppe.printSpiele" uib-btn-checkbox>Spiele</label>
+                                </div>
+                                <div class="btn-group" style="display: inline;">
+                                    <label class="btn btn-primary" ng-model="gruppe.printRasterBackground" uib-btn-checkbox>Raster Hintergrund</label>
+                                    <label class="btn btn-primary" ng-model="gruppe.printSpieleBackground" uib-btn-checkbox>Spiele Hintergrund</label>
+                                </div>
+                                <input class="form-control" style="display: inline;" size="30" type="text" ng-model="gruppe.printInfo" placeholder="Info">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teams einer Gruppe -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered" style="margin-top: 5px">
+                            <thead>
+                            <tr>
+                                <th style="width: 30px">ID</th>
+                                <th style="width: 250px">Teamname</th>
+                                <th style="width: 300px">Spieler</th>
+                                <th style="width: 250px">Herkunft</th>
+                                <th style="width: 150px">Handy</th>
+                                <th style="width: 100px">Bezahlt</th>
+                            </tr>
+                            </thead>
+                            <tbody id="container_{{bewerb.id}}_{{gruppe.id}}" class='containerVertical' style="height: 20px">
+                            <tr ng-if="gruppe.ownTeam.length == 0"><td colspan="6" style="text-align: center" class="text-muted">Keine Teams vorhanden</td></tr>
+                            <tr ng-repeat="team in gruppe.ownTeam" ng-class="{red:team.anwesend=='0'}"> <!--ng-class="{red:team.anwesend=='0'}"-->
+                                <td>{{team.onlineid}}</td>
+                                <td>{{team.display['Teamname']}}</td>
+                                <td>{{team.spieler}}</th>
+                                <td>{{team.display['Herkunft']}}</td>
+                                <td>{{team.display['Handynummer']}}</td>
+                                <td><span ng-if="team.bezahlt" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button ng-show="selBewerb.ChangedTeams" class="btn btn-success" ng-click="storeSelectedBewerb()">Änderungen Speichern</button>
+                    <button ng-show="selBewerb.ChangedTeams" class="btn btn-danger" ng-click="loadSelectedBewerb(selBewerb.id)">Änderungen verwerfen</button>
+                </div>
+            </div>
+
+            <!-- Erneut auslosen -->
+            <div class="row" ng-show="!bewerb.erneutauslosen && bewerb.ausgelost" style="margin-top: 15px">
+                <div class="col-md-12">
+                    <button class="btn btn-success" ng-click="bewerb.erneutauslosen = true">Erneut Auslosen</button>
+                </div>
+            </div>
+
+        </uib-tab>
+    </uib-tabset>
+</div>

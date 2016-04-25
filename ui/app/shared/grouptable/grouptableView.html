@@ -1,0 +1,16 @@
+<table class="repeat-table" border="1" id="gruppenRaster_1" style="border-collapse:collapse;margin: 10px">
+    <tr>
+        <td style="width:150px;border-left-style: hidden;border-top-style: hidden; text-align: center"><b>{{gruppe.name}}</b></td>
+        <td style="width: 35px" class="rotate" ng-repeat="innerTeam in gruppe.ownTeam"><div>{{innerTeam.teamname}}</div></td>
+        <td class="rotate"><div><span><b>Punktedifferenz</b></span></div></td>
+        <td class="rotate"><div><span><b>Punkte</b></span></div></td>
+        <td class="rotate"><div><span><b>Platzierung</b></span></div></td>
+    </tr>
+    <tr class="repeat-tr" ng-repeat="team in gruppe.ownTeam">
+        <td class="repeat-td">{{team.teamname}}</td>
+        <td style="width: 35px" ng-repeat="innerTeam in gruppe.ownTeam" ng-class="{normal:true,blackBack:team.id==innerTeam.id}">{{getErg(gruppe,team,innerTeam)}}</td>
+        <td style="width: 35px" class="normal werte">{{((team.punktediff > 0)?'+':'')}}{{team.punktediff}}</td>
+        <td style="width: 35px" class="normal werte">{{team.punkte}}</td>
+        <td style="width: 35px" class="normal werte">{{team.gruppenplatzierung}}</td>
+    </tr>
+</table>

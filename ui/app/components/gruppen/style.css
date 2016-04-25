@@ -1,0 +1,91 @@
+/* BASIC STYLINGS
+============================================================================= */
+td.rotate{
+    white-space: nowrap;
+}
+
+td.rotate > div{
+
+    /* translate(verschiebungX, verschiebungY) */
+
+    transform:          translate(57px,45px) rotate(270deg);
+    -o-transform:       translate(57px,45px) rotate(270deg);
+    -moz-transform:     translate(57px,45px) rotate(270deg);
+    -ms-transform:      translate(57px,45px) rotate(270deg);
+    -webkit-transform:  translate(57px,45px) rotate(270deg);
+
+    height: 135px; /* Höhe des Headers  */
+    width: 35px;
+}
+
+tr.repeat-tr{
+    height: 40px;     /* Höhe einer Zeile */
+}
+
+table.repeat-table{
+    margin-top: 15px;
+}
+
+.element::-webkit-scrollbar { width: 0 !important }
+
+td.repeat-td{
+    width: 150px;    /*Breite der linken Nation Spalte */
+    padding: 0px;
+    margin: 0px;
+}
+
+.normal{
+    font-size: 11px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+.werte{
+    font-size: 14px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.blackBack{
+    background-color: black;
+}
+
+body
+{
+    background-color: rgba(255, 255, 255, 0.0);
+}
+
+html{
+
+}
+
+#container2{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius:5px;
+    padding: 7px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+li {
+    float: left;
+    border: 1px solid #000;
+    border-bottom-width: 0;
+    margin: 3px 3px 0px 3px;
+    padding: 5px 5px 0px 5px;
+    background-color: #CCC;
+    color: #696969;
+}
+#mainView {
+    border: 1px solid black;
+    clear: both;
+    padding: 0 1em;
+}
+.active {
+    background-color: #FFF;
+    color: #000;
+}

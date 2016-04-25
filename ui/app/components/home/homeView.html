@@ -1,0 +1,45 @@
+<h3></h3>
+
+<div class="row">
+
+    <div class="col-md-8 col-md-offset-2">
+
+        <div class="form-group">
+            <h3>Teams</h3>
+
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Bewerb</th>
+                        <th style="width: 10%;">Anwesend</th>
+                        <th style="width: 10%;">Teams</th>
+                        <th>Fortschritt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="bewerb in bewerbe ">
+                        <td>{{bewerb.name}}</td>
+                        <td>{{bewerb.anwesend}}</td>
+                        <td>{{bewerb.gesamt}}</td>
+                        <td> <uib-progressbar style="margin: 0px" max="bewerb.gesamt" value="bewerb.anwesend" type="success">{{bewerb.anwesend}}/{{bewerb.gesamt}}</uib-progressbar></td>
+                    </tr>
+
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th>Gesamt</th>
+                        <th>{{gesamt.anwesend}}</th>
+                        <th>{{gesamt.gesamt}}</th>
+                        <th><uib-progressbar style="margin: 0px"  max="gesamt.gesamt" value="gesamt.anwesend" type="success">{{gesamt.anwesend}}/{{gesamt.gesamt}}</uib-progressbar></th>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+
+    </div>
+    <div class="col-md-5">
+
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="row">
+
+    <div class="col-md-8 col-md-offset-2">
+
+        <div class="form-group">
+            <h3>Monitore</h3>
+
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">ID</th>
+                        <th style="width: 15%;">Monitor #</th>
+                        <th style="width: 55%;">Anzeige</th>
+                        <th style="width: 15%;">Aktion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="monitor in monitore ">
+                        <td>{{monitor.id}}</td>
+                        <td>{{monitor.name}}</td>
+                        <td>{{monitor.url}}</td>
+                        <td><a href="{{monitor.url}}" target="_blank"><button class="btn">Show</button></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-8 col-md-offset-2">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Ansichten <button ng-click="newansicht = true" class="btn" ng-show="!newansicht">New</button></h3>
+            </div>
+        </div>
+
+        <div class="row" ng-show="newansicht">
+            <div class="col-md-12">
+                <div class="form-group form-inline">
+                    <input class="form-control" placeholder="Name" ng-model="ansicht.name">
+                    <input class="form-control" placeholder="Url" ng-model="ansicht.url">
+                    <Button class="form-control" class="btn" ng-click="saveNewAnsicht(ansicht)">Speichern</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 15%;">ID</th>
+                    <th style="width: 15%;">Name</th>
+                    <th style="width: 55%;">Url</th>
+                    <th style="width: 15%;">Aktion</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="ansicht in monitoransichten ">
+                    <td>{{ansicht.id}}</td>
+                    <td>{{ansicht.name}}</td>
+                    <td>{{ansicht.url}}</td>
+                    <td><a href="{{ansicht.url}}" target="_blank"><button class="btn">Show</button></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

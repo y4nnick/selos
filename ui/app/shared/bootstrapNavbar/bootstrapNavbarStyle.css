@@ -1,0 +1,77 @@
+.navbar-default .navbar-nav > li > a{
+    color: #71499D;
+    padding-top: 28px;
+    font-size: 130%;
+}
+
+.navbar-brand {
+    height: 75px;
+}
+
+.navbar-brand > img {
+    height: 60px;
+    display: inline;
+}
+
+.navbar-default .navbar-brand{
+    padding: 8px 14px;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus{
+    color:#E88A62;
+}
+
+.navbar-nav > li:hover{
+    color:#E88A62;
+}
+
+.navbar-nav > a:hover{
+    color:#E88A62;
+}
+
+
+.navbar-nav > li > a {
+    padding-bottom: 27px;
+    color: inherit;
+}
+
+.navbar-toggle{
+    margin-top: 21px;
+}
+
+@media (min-width: 768px){
+ .navbar-right {
+     margin-right: 0px;
+ }
+}
+
+/*
+    Nav Buttons
+*/
+
+.navbarbtn {
+    width: 95px;
+
+    font-size: 130%;
+    margin-top: 20px;
+    margin-left: 15px;
+    background-color: #71499D;
+    background-image: none;
+    color: white;
+    text-shadow: none;
+}
+
+.navbarbtn:hover {
+    background-color: #71499D;
+    background-image: none;
+    color: #E88A62;
+    text-shadow: none;
+}
+
+
+.navbarbtn:focus{
+    background-color: #71499D;
+    background-image: none;
+    color: #E88A62;
+    text-shadow: none;
+}

@@ -1,0 +1,44 @@
+{
+  "name": "checkmypitch",
+  "version": "0.0.1",
+  "private": true,
+  "authors": [
+    "Yannick <y.schwarenthorer@icloud.com>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "source",
+    "spec",
+    ".bowerrc",
+    ".gitignore",
+    ".jshintignore",
+    ".jshintrc",
+    "bower.json",
+    "gruntfile.js",
+    "package.json",
+    "README.md"
+  ],
+  "dependencies": {
+    "angular": "~1.4.3",
+    "bootstrap": "~3.3.5",
+    "angular-animate": "~1.4.3",
+    "angular-ui-router": "~0.2.15",
+    "ngDialog": "~0.4.0",
+    "angular-resource": "~1.4.3",
+    "angular-cookies": "~1.4.3",
+    "ng-busy": "~0.2.0",
+    "angular-mocks": "~1.4.3",
+    "sweetalert": "~1.1.0"
+  },
+  "resolutions": {
+    "angular": "~1.4.3"
+  }
+}

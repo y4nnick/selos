@@ -1,0 +1,119 @@
+<style>
+    .highlighted { background: yellow }
+    .genug {color:lightgreen}
+    .nichtgenug {color:lightcoral}
+</style>
+
+
+
+
+<div class="row" style="font-size: 100%;margin-left: 10px;margin-right: 10px">
+    
+    <div class="col-md-6" style="border-right: 1px solid lightgrey">
+        <div ng-show="team1 != null" style="margin-left: 10px">
+            <div class="form-group">
+                <h2 style="margin-bottom: 2px">{{team1.display['Teamname']}} <small>#{{team1.onlineid}}</small><button type="button" class="pull-right btn btn-danger" ng-click="team1=null">X</button></h2>
+            </div>
+
+            <div class="form-group">
+                <label>SpielerInnen</label>
+                <p>{{team1.spieler}}</p>
+            </div>
+
+            <div class="form-group">
+                <label>Bewerb</label>
+                <p>{{getBewerbNameLong(team1.bewerb_id)}}</p>
+            </div>
+
+            <div class="form-group">
+                <h2>Zusatzinfos</h2>
+            </div>
+
+            <div class="form-group" ng-repeat="info in getRelevantTeamInfo(team1)">
+                <label>{{info.titel}}</label>
+                <p>{{info.wert}}</p>
+            </div>
+        </div>
+
+        <div ng-show="team1 == null">
+            <div class="input-group" style="width: 100%">
+                <span  style="height: 50px;width: 50px" class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                <input style="height: 50px;font-size: 200%" class="form-control" type="text" ng-model="searchTerm" placeholder="ID, Teamname oder Spielername" aria-describedby="basic-addon1">
+            </div>
+            <div style="height:450px;overflow:auto;margin-top: 20px">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 1%">B</th>
+                        <th style="width: 15%">Teamname</th>
+                        <th style="width: 35%">Spieler</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="team in teams | filter:search" ng-click="onDoubleClick(1,team)">
+                        <td>{{getBewerbName(team.bewerb_id)}}</td>
+                        <td ng-bind-html="team.display['Teamname'] | highlight:searchTermSmall"></td>
+                        <td ng-bind-html="team.spieler  | highlight:searchTermSmall"></th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div ng-show="team2 != null" style="margin-left: 10px">
+            <div class="form-group">
+                <h2 style="margin-bottom: 2px">{{team2.display['Teamname']}} <small>#{{team2.onlineid}}</small><button type="button" class="pull-right btn btn-danger" ng-click="team2=null">X</button></h2>
+            </div>
+
+            <div class="form-group">
+                <label>SpielerInnen</label>
+                <p>{{team2.spieler}}</p>
+            </div>
+
+            <div class="form-group">
+                <label>Bewerb</label>
+                <p>{{getBewerbNameLong(team2.bewerb_id)}}</p>
+            </div>
+
+            <div class="form-group">
+                <h2>Zusatzinfos</h2>
+            </div>
+
+            <div class="form-group" ng-repeat="info in getRelevantTeamInfo(team2)">
+                <label>{{info.titel}}</label>
+                <p>{{info.wert}}</p>
+            </div>
+        </div>
+
+        <div ng-show="team2 == null">
+            <div class="input-group" style="width: 100%">
+                <span  style="height: 50px;width: 50px" class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                <input style="height: 50px;font-size: 200%" class="form-control" type="text" ng-model="searchTerm2" placeholder="ID, Teamname oder Spielername" aria-describedby="basic-addon1">
+            </div>
+            <div style="height:450px;overflow:auto;margin-top: 20px">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 1%">B</th>
+                        <th style="width: 15%">Teamname</th>
+                        <th style="width: 35%">Spieler</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="team in teams | filter:search2" ng-click="onDoubleClick(2,team)">
+                        <td>{{getBewerbName(team.bewerb_id)}}</td>
+                        <td ng-bind-html="team.display['Teamname'] | highlight:searchTermSmall2"></td>
+                        <td ng-bind-html="team.spieler  | highlight:searchTermSmall2"></th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+

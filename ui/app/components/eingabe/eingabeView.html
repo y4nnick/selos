@@ -1,0 +1,173 @@
+<style>
+    .highlighted { background: yellow }
+    .genug {color:lightgreen}
+    .nichtgenug {color:lightcoral}
+</style>
+
+<div class="table-responsive Fade" ng-hide="currentTeam.id != null" style="padding-left: 15px;padding-right: 15px">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="input-group" style="width: 100%">
+                <span  style="height: 50px;width: 50px" class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                <input style="height: 50px;font-size: 200%" class="form-control" type="text" ng-model="searchTerm" placeholder="ID, Teamname oder Spielername" aria-describedby="basic-addon1">
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Teams <small> {{totalItems}}</small></h1>
+            <div style="height:550px;overflow:auto;">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%">ID</th>
+                        <th style="width: 13%">Bewerb</th>
+                        <th style="width: 20%">Teamname</th>
+                        <th style="width: 25%">Spieler</th>
+                        <th style="width: 15%">Herkunft</th>
+                        <th style="width: 15%">Handy</th>
+                        <th style="width: 7%">Bezahlt</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="team in teams | filter:search" ng-dblclick="onDoubleClick(team)">
+                        <td ng-bind-html="team.onlineid | highlight:searchTermSmall"></td>
+                        <td>{{getBewerbName(team.bewerb_id)}}</td>
+                        <td ng-bind-html="team.display['Teamname'] | highlight:searchTermSmall"></td>
+                        <td ng-bind-html="team.spieler  | highlight:searchTermSmall"></th>
+                        <td>{{team.display['Herkunft']}}</td>
+                        <td>{{team.display['Handynummer']}}</td>
+                        <td>
+                            <span ng-if="genugBezahlt(team)" class="glyphicon glyphicon-ok genug" aria-hidden="true"></span>
+                            <span ng-hide="genugBezahlt(team)" class="glyphicon glyphicon-remove nichtgenug" aria-hidden="true"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="Fade" ng-show="currentTeam.id != null" style="margin-left: 10%;margin-right: 10%;margin-top: 0px">
+
+    <div class="row" >
+        <div class="col-md-6">
+            <div class="form-group">
+                <h2 style="margin-bottom: 2px">{{currentTeam.display['Teamname']}} <small>#{{currentTeam.onlineid}}</small> </h2>
+            </div>
+
+            <div class="form-group">
+                <label>SpielerInnen</label>
+                <p>{{currentTeam.spieler}}</p>
+            </div>
+
+            <div class="form-group">
+                <label>Bewerb</label>
+                <p>{{getBewerbName(currentTeam.bewerb_id)}}</p>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <h2>Nenngeld</h2>
+            </div>
+
+            <div class="row">
+
+                <div class="form-group col-md-5" ng-repeat="spieler in currentTeam.ownSpieler">
+                    <label>{{spieler.vorname}} {{spieler.nachname}} <i ng-show="isZweiterBewerb(spieler)" class="fa fa-hand-peace-o" title="Zweiter Bewerb des Spielers"></i></label>
+                    <p>Nenngeld: {{spieler.nenngeld}}€</p>
+                    <p>Kaution: {{spieler.kaution}}€</p>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Gesamt</label>
+                    <p style="font-size: 300%">{{currentTeam.nenngeld_gesamt}}€</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <h2>Zusatzinfos</h2>
+            </div>
+
+            <div class="form-group" ng-repeat="info in currentTeam.ownTeaminfo">
+                <label>{{info.titel}}</label>
+                <p>{{info.wert}}</p>
+            </div>
+
+
+            <div class="form-group">
+                <label>Anmeldung</label>
+                <p>{{currentTeam.angemeldet | myDateFilter | date: 'dd.MM.yyyy hh:mm'}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <h2>Bezahlung</h2>
+            </div>
+
+            <div class="row">
+
+                <div class="form-group col-md-4">
+                    <label>Eingezahlt</label>
+                    <p style="font-size: 300%;margin-bottom: 0px">{{currentTeam.bezahlt_betrag}}€</p>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Vor Ort</label>
+                    <input ng-change="changend = true; currentTeam.anwesend = true; currentTeam.abgemeldet = false" style="height: 50px; width: 100px; font-size: 200%; margin-top: 5px" string-to-number class="form-control" type="number" ng-model="currentTeam.bezahlt_vorort">
+                </div>
+
+                <div class="form-group col-md-4" ng-class="{genug:genugBezahlt(currentTeam),nichtgenug:!genugBezahlt(currentTeam)}">
+                    <label>Gesamt</label>
+                    <p style="font-size: 300%;margin-bottom: 0px;">
+                        {{getBezahltGesamt(currentTeam)}}€
+                        <!-- <span ng-if="genugBezahlt(currentTeam)" class="glyphicon glyphicon-ok" aria-hidden="true"></span>-->
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Notizen</label>
+                        <textarea ng-change="changend = true" style="width: 100%" ng-model="currentTeam.notiz" class="form-control" rows="6"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="height: 100%">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label>
+                            <checkbox ng-click="changend = true; currentTeam.abgemeldet = !currentTeam.anwesend " style="margin-bottom: 5px;" ng-true-value="1" ng-false-value="0" ng-model="currentTeam.anwesend"/> Anwesend
+                        </label>
+                        <label style="margin-left: 5px">
+                            <checkbox ng-click="changend = true; currentTeam.anwesend = !currentTeam.abgemeldet" style="margin-bottom: 5px;" ng-true-value="1" ng-false-value="0" ng-model="currentTeam.abgemeldet"/> Abgemeldet
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <p class="text-right">
+                        <button ng-click="resetCurrentTeam()" class="btn btn-danger">Abbrechen</button>
+                        <button ng-click="store(currentTeam)" ng-disabled="!changedCurrentTeam()" class="btn btn-success" style="margin-left: 5px">Speichern</button>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
