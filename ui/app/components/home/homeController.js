@@ -1,9 +1,21 @@
 angular.module('rb').controller('homeController' , homeController);
 
-function homeController($scope, team, $rootScope, $http,$interval) {
+function homeController($scope, team,$interval) {
 
     $scope.gesamt = null;
     $scope.bewerbe = null;
+
+    $scope.teamnamen = "";
+
+    $scope.loadTeamnamen = function(){
+        team.query(function(data){
+            data.forEach(function(team){
+                $scope.teamnamen += team.display["Teamname"] + "\n";
+            })
+        })
+
+    }
+    $scope.loadTeamnamen();
 
     $scope.reload = function(){
 
@@ -26,4 +38,6 @@ function homeController($scope, team, $rootScope, $http,$interval) {
 
     $interval($scope.reload,5000);
     $scope.reload();
+
+
 }
