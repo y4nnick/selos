@@ -108,6 +108,8 @@ class GENERIC_REST {
             case "POST":
 
                 if($filecontent = file_get_contents("php://input") !== false){
+
+
                 //if(!(file_get_contents("php://input"))){
                     $this->_request = $this->sanitize(file_get_contents("php://input"));
                 }else{
@@ -126,8 +128,6 @@ class GENERIC_REST {
 
                 $fileContent = file_get_contents("php://input");
 
-                //$this->_request = $this->sanitize(file_get_contents("php://input"));
-               // if($filecontent = file_get_contents("php://input") !== false){
                 if(strlen($fileContent) != 0){
                     $this->_request = $this->sanitize($fileContent);
                 }else{

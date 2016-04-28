@@ -2,6 +2,7 @@
     .highlighted { background: yellow }
     .genug {color:lightgreen}
     .nichtgenug {color:lightcoral}
+    .marginleft20 {margin-left: 20px}
 </style>
 
 <div class="table-responsive Fade" ng-hide="currentTeam.id != null" style="padding-left: 15px;padding-right: 15px">
@@ -64,17 +65,18 @@
             </div>
 
             <div ng-repeat="spieler in currentTeam.ownSpieler" style="margin-top: 35px">
+
                 <div class="form-inline">
                     <h3>{{$index + 1}}. Spieler</h3>
 
                     <div class="form-group">
                         <label>Vorname</label>
-                        <p style="width: 250px;"><input  class="form-control" ng-model="spieler.vorname"></p>
+                        <p><input style="width: 200px" class="form-control" ng-model="spieler.vorname"></p>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-left: 20px">
                         <label>Nachname</label>
-                        <p><input style="width: 250px;" class="form-control" ng-model="spieler.nachname"></p>
+                        <p><input style="width: 200px" class="form-control" ng-model="spieler.nachname"></p>
                     </div>
 
                 </div>
@@ -83,17 +85,17 @@
 
                     <div class="form-group">
                         <label>Nenngeld</label>
-                        <p style="width: 250px;"><input  class="form-control" ng-model="spieler.nenngeld"></p>
+                        <p><input style="width: 200px;" class="form-control" ng-model="spieler.nenngeld"></p>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-left: 20px">
                         <label>Kaution</label>
-                        <p><input style="width: 250px;" class="form-control" ng-model="spieler.kaution"></p>
+                        <p><input style="width: 200px;" class="form-control" ng-model="spieler.kaution"></p>
                     </div>
 
-                    <div class="form-group" ng-repeat="info in spieler.ownSpielerinfo">
+                    <div class="form-group" ng-repeat="info in spieler.ownSpielerinfo" ng-class="{marginleft20:$index%2==1}">
                         <label>{{info.titel}}</label>
-                        <p><input style="width: 250px;" class="form-control" ng-model="info.wert"></p>
+                        <p><input style="width: 200px;" class="form-control" ng-model="info.wert"></p>
                     </div>
 
                 </div>
