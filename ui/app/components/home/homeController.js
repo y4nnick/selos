@@ -6,11 +6,20 @@ function homeController($scope, team,$interval) {
     $scope.bewerbe = null;
 
     $scope.teamnamen = "";
+    $scope.teilnehmer = "";
 
     $scope.loadTeamnamen = function(){
         team.query(function(data){
             data.forEach(function(team){
+
+
                 $scope.teamnamen += team.display["Teamname"] + "\n";
+
+                team.spieler.split(" / ").forEach(function(teil){
+                    $scope.teilnehmer += teil + "\n";
+                })
+
+
             })
         })
 
