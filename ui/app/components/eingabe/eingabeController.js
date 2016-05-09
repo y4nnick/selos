@@ -15,25 +15,19 @@ angular.module('rb').controller('eingabeController' , eingabeController)
 function eingabeController($scope,team,bewerb,$rootScope) {
 
     $scope.teams = [];
-    $scope.searchTerm = "";
-
     $scope.currentTeamSave = null;
     $scope.currentTeam = null;
-
     $scope.editmode = false;
 
-    $scope.searchTermSmall = "";
-
-    $scope.$watch('searchTerm', function() {
-        $scope.searchTermSmall = $scope.searchTerm.toLowerCase();
-    });
+    //
+    // Store function
+    //
 
     $scope.store = function(){
 
         $scope.currentTeam.$update().then(
             //success
             function( value ){
-                console.log(value);
                 swal({
                     title: "Erfolgreich!",
                     text: "Team wurde erfolgreich gespeichert",
@@ -42,7 +36,6 @@ function eingabeController($scope,team,bewerb,$rootScope) {
                 });
                 $scope.currentTeam = null;
                 $scope.editmode = false;
-                console.log(value);
                 $scope.storeUpdatedTeam(value);
                // $scope.loadTeams();
             },
@@ -60,6 +53,8 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     var BreakException= {};
     $scope.storeUpdatedTeam = function(team){
 
+        $scope.setBezahlung(team);
+
         var index = 0;
         var foundIndex = -1;
         try{
@@ -76,14 +71,107 @@ function eingabeController($scope,team,bewerb,$rootScope) {
 
         if(foundIndex != -1){
             $scope.teams[foundIndex] = team;
-            console.log("found and updated team");
-            console.log( $scope.teams[foundIndex]);
         }
     }
 
-    $scope.selectedCurrentTeam = function(){
-        return $scope.currentTeam != {};
+
+    //
+    // Search
+    //
+    $scope.searchTerm = "";
+    $scope.searchTermSmall = "";
+    $scope.filter = {
+        nurBezahlte: false,
+        nurNichtBezahlte: false,
+        anwesend:false,
+        nichtanwesend:false,
+        bewerb: null
     }
+
+    $scope.$watch('searchTerm', function() {
+        $scope.searchTermSmall = $scope.searchTerm.toLowerCase();
+    });
+
+    $scope.search = function(inputTeam){
+
+        var filter = true;
+
+        //Teamname erst ab 2 Zeichen
+        if($scope.searchTermSmall != null && $scope.searchTermSmall.length >= 2){
+            filter = filter && (
+                (inputTeam.onlineid.indexOf($scope.searchTermSmall) !== -1)
+                ||  (angular.lowercase(inputTeam.spieler).indexOf($scope.searchTermSmall) !== -1)
+                ||  (angular.lowercase(inputTeam.display['Teamname']).indexOf($scope.searchTermSmall) !== -1) );
+        }
+
+        //Bezahlt
+        if($scope.filter.nurBezahlte){
+            filter = filter && inputTeam.genugBezahlt;
+        }else if($scope.filter.nurNichtBezahlte){
+            filter = filter && !inputTeam.genugBezahlt;
+        }
+
+        //Anwesenheit
+        if($scope.filter.anwesend){
+            filter = filter && (inputTeam.anwesend == 1);
+        }else if($scope.filter.nichtanwesend){
+            filter = filter && (inputTeam.anwesend != 1);
+        }
+
+        //Bewerb
+        if($scope.filter.bewerb != null){
+            filter = filter && (inputTeam.bewerb_id == $scope.filter.bewerb.id);
+        }
+
+        return filter;
+    };
+
+
+
+    //
+    // Load basic data
+    //
+
+    $scope.loadBewerbe = function(){
+        bewerb.query(function(data){
+            $rootScope.bewerbe = [];
+            $rootScope.bewerbeIndex = []
+
+            data.forEach(function(entry){
+                $rootScope.bewerbe.push(entry);
+                $rootScope.bewerbeIndex[entry.id] = entry;
+            });
+
+        },function(error){
+            console.log("error while loading bewerbe: " + error);
+        });
+    }
+
+    $scope.query = null;
+    $scope.loadTeams = function(){
+        $scope.query = team.query(function(data){
+            $scope.teams = data;
+            $scope.teams.forEach(function(team){
+               $scope.setBezahlung(team);
+            });
+
+        },function(error){
+            $scope.teams = [];
+        })
+    }
+
+    $scope.setBezahlung = function(team){
+        team.genugBezahlt = $scope.genugBezahlt(team);
+    }
+
+    $scope.loadBewerbe();
+    $scope.loadTeams();
+
+
+
+    //
+    // Bearbeiten Stuff
+    //
 
     $scope.isInt = function(value) {
         return !isNaN(value) &&
@@ -91,45 +179,13 @@ function eingabeController($scope,team,bewerb,$rootScope) {
             !isNaN(parseInt(value, 10));
     }
 
-    $scope.query = null;
-    $scope.loadTeams = function(){
-        $scope.query = team.query(function(data){
-            $scope.totalItems = data.length;
-            $scope.teams = data;
-            console.log($scope.teams);
-        },function(error){
-            console.log("error while loading teams: " + error);
-            $scope.teams = [];
-        })
-    }
-
     $scope.onDoubleClick = function(inputTeam){
         var loadedTeam = team.get({id:inputTeam.id});
         $scope.currentTeam = loadedTeam;
         $scope.currentTeamSave = angular.copy(loadedTeam);
+
         $scope.changend = false;
     }
-
-    $scope.search = function(inputTeam){
-        return (
-                (inputTeam.onlineid.indexOf($scope.searchTermSmall) !== -1)
-            ||  (angular.lowercase(inputTeam.spieler).indexOf($scope.searchTermSmall) !== -1)
-            ||  (angular.lowercase(inputTeam.display['Teamname']).indexOf($scope.searchTermSmall) !== -1) )
-    };
-
-    $scope.loadBewerbe = function(){
-        bewerb.query(function(data){
-            $rootScope.bewerbe = [];
-            data.forEach(function(entry){
-                $rootScope.bewerbe[entry.id] =  entry;
-            });
-        },function(error){
-            console.log("error while loading bewerbe: " + error);
-        });
-    }
-
-    $scope.loadBewerbe();
-    $scope.loadTeams();
 
     $scope.changend = false;
     $scope.changedCurrentTeam = function(){
@@ -137,6 +193,10 @@ function eingabeController($scope,team,bewerb,$rootScope) {
             return false;
         }
         return $scope.changend;
+    }
+
+    $scope.selectedCurrentTeam = function(){
+        return $scope.currentTeam != {};
     }
 
     $scope.resetCurrentTeam = function(){
@@ -169,8 +229,8 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     }
 
     $scope.getBewerbName = function(id){
-        if($rootScope.bewerbe !== undefined && $rootScope.bewerbe[id] !== undefined){
-            return $rootScope.bewerbe[id].name;
+        if($rootScope.bewerbeIndex !== undefined && $rootScope.bewerbeIndex[id] !== undefined){
+            return $rootScope.bewerbeIndex[id].name;
         }
     }
 
@@ -205,9 +265,12 @@ function eingabeController($scope,team,bewerb,$rootScope) {
         return zweiter;
     }
 
+    //
+    // Bezahlungen vor Ort
+    //
+
     $scope.bezahltvorort = 0;
     $scope.updateBezahlungen = function(){
-
         team.zahlungenVorOrt(function(response){
             $scope.bezahltvorort = response.bezahlt;
         },function(response){

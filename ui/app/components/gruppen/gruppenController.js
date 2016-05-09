@@ -125,7 +125,7 @@ function gruppenController($scope,$element, dragularService, bewerb,gruppe,$time
         },
         spiele:false,
         spieleBackground:false,
-        spieleInfo: "Zwei Sätze auf 15"
+        spieleInfo: "Ein Satz auf 21"
     }
 
     $scope.selectedBlatt = function(blatt){

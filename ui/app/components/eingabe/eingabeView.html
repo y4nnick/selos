@@ -2,49 +2,72 @@
     .highlighted { background: yellow }
     .genug {color:lightgreen}
     .nichtgenug {color:lightcoral}
+    .icon-stack {
+        position: relative;
+    }
+    .icon-stack .glyphicon {
+        position: absolute;
+    }
 </style>
 
 <!-- Suche -->
 <div class="table-responsive Fade" ng-hide="currentTeam.id != null" style="padding-left: 15px;padding-right: 15px">
     <div class="row">
 
-        <!-- Vor Ort bezahlt -->
-        <div class="col-md-3" style="margin-top: 5px">
-            <button class="btn" ng-click="updateBezahlungen()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-            <label>Vor Ort bezahlt: </label>
-            <span>{{bezahltvorort}}€</span>
-        </div>
+
 
         <!-- Team suche -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="input-group" style="width: 100%">
-                <span  style="height: 50px;width: 50px" class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-                <input style="height: 50px;font-size: 200%" class="form-control" type="text" ng-model="searchTerm" placeholder="ID, Teamname oder Spielername" aria-describedby="basic-addon1">
+                <span  style="height: 50px;width: 50px" class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </span>
+                <input style="height: 50px;font-size: 200%" class="form-control" type="text" ng-model="searchTerm" placeholder="ID, Teamname oder Spieler" aria-describedby="basic-addon1">
             </div>
         </div>
-        <div class="col-md-3">
+
+        <!-- Filter -->
+        <div class="col-md-6" style="margin-top: 10px;padding-left: 0px" >
+
+            <select ng-options="bewerb as bewerb.name for bewerb in bewerbe" style="width: 150px; display: inline" class="form-control" id="bewerb" ng-model="filter.bewerb">
+                <option value="">Alle</option>
+            </select>
+
+            <checkbox style="margin-left: 20px" ng-model="filter.nurBezahlte" ng-change="(filter.nurBezahlte?filter.nurNichtBezahlte = false:1)"/> Bezahlt
+            <checkbox ng-model="filter.nurNichtBezahlte" ng-change="(filter.nurNichtBezahlte?filter.nurBezahlte = false:1)"/> nicht Bezahlt
+            <checkbox style="margin-left: 20px" ng-model="filter.anwesend" ng-change="(filter.anwesend?filter.nichtanwesend = false:1)"/> Anwesend
+            <checkbox ng-model="filter.nichtanwesend" ng-change="(filter.nichtanwesend?filter.anwesend = false:1)"/> nicht Anwesend
+        </div>
+
+
+
+        <!-- Vor Ort bezahlt -->
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Vor Ort bezahlt: </label>
+            <span>{{bezahltvorort}}€</span>
+            <button class="btn" ng-click="updateBezahlungen()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
         </div>
     </div>
 
     <!-- Teams -->
-    <div class="row">
+    <div class="row" style="margin-top: 10px">
         <div class="col-md-12">
-            <h1>Teams <small> {{totalItems}}</small></h1>
-            <div style="height:550px;overflow:auto;">
-                <table class="table table-hover table-bordered">
+            <p class="text-muted" style="font-size: 120%">{{results.length }}. Teams gefunden</p>
+            <div style="height:580px;overflow:auto;">
+                <table class="table table-hover table-bordered table-striped">
                     <thead>
                     <tr>
                         <th style="width: 5%">ID</th>
                         <th style="width: 13%">Bewerb</th>
-                        <th style="width: 20%">Teamname</th>
+                        <th style="width: 15%">Teamname</th>
                         <th style="width: 25%">Spieler</th>
                         <th style="width: 15%">Herkunft</th>
                         <th style="width: 15%">Handy</th>
-                        <th style="width: 7%">Bezahlt</th>
+                        <th style="width: 5%">Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="team in teams | filter:search" ng-dblclick="onDoubleClick(team)">
+                    <tr ng-repeat="team in results = ( teams | filter:search)" ng-dblclick="onDoubleClick(team)">
                         <td ng-bind-html="team.onlineid | highlight:searchTermSmall"></td>
                         <td>{{getBewerbName(team.bewerb_id)}}</td>
                         <td ng-bind-html="team.display['Teamname'] | highlight:searchTermSmall"></td>
@@ -52,8 +75,11 @@
                         <td>{{team.display['Herkunft']}}</td>
                         <td>{{team.display['Handynummer']}}</td>
                         <td>
-                            <span ng-if="genugBezahlt(team)" class="glyphicon glyphicon-ok genug" aria-hidden="true"></span>
-                            <span ng-hide="genugBezahlt(team)" class="glyphicon glyphicon-remove nichtgenug" aria-hidden="true"></span>
+                            <span ng-show="team.genugBezahlt" class="glyphicon glyphicon-euro genug" aria-hidden="true"></span>
+                            <span ng-hide="team.genugBezahlt" class="glyphicon glyphicon-euro nichtgenug" aria-hidden="true"></span>
+
+                            <span ng-show="team.anwesend == 1" class="glyphicon glyphicon-ok genug" aria-hidden="true"></span>
+                            <span ng-hide="team.anwesend == 1" class="glyphicon glyphicon-remove nichtgenug" aria-hidden="true"></span>
                         </td>
                     </tr>
                     </tbody>
@@ -64,6 +90,7 @@
 </div>
 
 <!-- Bezahlung eintragen -->
+
 <div class="Fade" ng-show="currentTeam.id != null && editmode == false" style="margin-left: 10%;margin-right: 10%;margin-top: 0px">
 
     <div class="row" >
@@ -83,6 +110,8 @@
             </div>
 
         </div>
+
+        <!-- Nenngeld -->
 
         <div class="col-md-6">
             <div class="form-group">
