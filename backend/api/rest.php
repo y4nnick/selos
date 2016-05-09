@@ -123,9 +123,6 @@ class GENERIC_REST {
                 break;
 
             case "PUT":
-
-              //  print_r(file_get_contents("php://input"));
-
                 $fileContent = file_get_contents("php://input");
 
                 if(strlen($fileContent) != 0){

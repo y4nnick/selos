@@ -4,7 +4,8 @@ function bewerbFactory($resource,$rootScope){
     var resource = $resource($rootScope.url + "api/gruppe/:id",{id: "@id"},
         {
             'update': { method:'PUT' },
-            'drucken': {method:'POST', url: $rootScope.url + "api/gruppe/:id/drucken"}
+            'drucken': {method:'POST', url: $rootScope.url + "api/gruppe/:id/drucken"},
+            'druckenCustom': {method:'POST', url: $rootScope.url + "api/gruppe/drucken"}
         }
     );
 

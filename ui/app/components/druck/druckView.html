@@ -1,0 +1,166 @@
+<link rel="stylesheet" type="text/css" href="style.css">
+<style>
+    .red{
+        background-color: lightcoral;
+    }
+    .moveup {
+        transition: 0.3s linear all;
+        height: 100%;
+        overflow: hidden;
+    }
+    .moveup.ng-hide {
+        height:0;
+    }
+    .box{
+        width: 100%;
+        height:50px;
+        border-top:1px solid lightgrey;
+        border-bottom:1px solid lightgrey;
+        margin-top: 0px;
+    }
+    .box > span{
+        font-size: 120%;
+        line-height: 50px;
+        margin-left: 10px;
+    }
+    .first {background: #f1f1f1
+    }
+    .borderbottom {border: 0px; border-bottom:1px solid lightgrey;}
+    .noborder {border: 0px}
+    .box > div      {   margin-top: 9px;margin-right: 10px}
+    .box > select   {   margin-top: 7px;margin-right: 10px}
+    .box > input    {   margin-top: 7px;margin-right: 10px}
+    .toggle-switch .switch-left  {   background: #4a9a42;height: 28px}
+    .toggle-switch .switch-right  {  height: 28px}
+
+</style>
+
+<div class="row" style="margin-top: 20px;margin-left: 20px">
+
+    <div class="col-md-5 col-md-offset-1">
+
+        <form class="form-inline form-group-lg">
+            <div class="form-group">
+                <div class="input-group" style="width: 400px">
+                    <div class="input-group-addon" style="padding: 0px 6px 0px 6px"><i class="fa fa-users" aria-hidden="true"></i></div>
+                    <input type="text" class="form-control" placeholder="Neues Team" list="teamlist" ng-model="team">
+
+                     <span class="input-group-btn">
+                           <button type="submit" class="btn btn-primary" style="height: 46px" ng-click="selectTeam(team)" >Add</button>
+                     </span>
+                </div>
+            </div>
+
+        </form>
+
+        <datalist id="teamlist">
+            <option data-ng-repeat="team in teams" value="{{team.display.Teamname}}">
+        </datalist>
+    </div>
+
+    <div class="col-md-5">
+        <form class="form-inline pull-right">
+            <div class="form-group form-inline">
+                <label for="bewerb">Bewerb</label>
+                <select style="width: 250px" class="form-control" id="bewerb" ng-model="print.bewerb">
+                    <option ng-repeat="be in bewerbe">{{be.name}}</option>
+                </select>
+            </div>
+            <div class="form-group form-inline" style="margin-left: 10px">
+                <label for="bewerb">Gruppe</label>
+                <input class="form-control" style="width: 150px" ng-model="print.gruppenname">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 20px;margin-left: 20px; height: 550px">
+
+    <div class="col-md-5" style="border-right: 1px solid lightgrey; height: 100%">
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th style="width: 5%">#</th>
+                <th style="width: 15%">Teamname</th>
+                <th style="width: 25%">Spieler</th>
+                <th style="width: 5%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="team in selectedTeams track by $index">
+                <td>{{$index+1}}</td>
+                <td>{{team.display['Teamname']}}</td>
+                <td>{{team.spieler}}</td>
+                <td><a style="cursor: pointer" ng-click="removeTeam(team)"><span class="glyphicon glyphicon-remove"></span></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="col-md-6">
+
+        <div class="row" style="height: 500px">
+
+            <!-- Raster Drucken -->
+            <div class="col-md-6">
+
+                <div class="box first">
+                    <span>Raster</span>
+                    <toggle-switch class="pull-right" ng-model="print.raster" ></toggle-switch>
+                </div>
+
+                <div class="box moveup noborder" ng-show="print.raster">
+                    <span>Hintergrund</span>
+                    <toggle-switch class="pull-right" ng-model="print.rasterBackground"></toggle-switch>
+                </div>
+
+                <div class="box moveup noborder" ng-show="print.raster">
+                    <span>Blatt Größe</span>
+                    <select ng-change="selectedBlatt(print.rasterblatt.selected)" style="width: 100px; display: inline" class="form-control pull-right" ng-model="print.rasterblatt.selected" ng-options="o as o for o in print.rasterblatt.options"></select>
+                </div>
+
+                <div class="box moveup borderbottom" ng-show="print.raster" >
+                    <span>Raster Größe</span>
+                    <select ng-disabled="(print.rasterblatt.selected == 'A4')" style="width: 100px; display: inline" class="form-control pull-right" ng-model="print.rastergroesse.selected" ng-options="o as o for o in print.rastergroesse.options"></select>
+                </div>
+
+            </div>
+
+            <!-- Spiele Drucken -->
+            <div class="col-md-6">
+
+                <div class="box first">
+                    <span>Spiele</span>
+                    <toggle-switch class="pull-right" ng-model="print.spiele"></toggle-switch>
+                </div>
+
+                <div class="box moveup borderbottom" ng-show="print.spiele">
+                    <span>Hintergrund</span>
+                    <toggle-switch class="pull-right" ng-model="print.spieleBackground"></toggle-switch>
+                </div>
+
+                <div class="box moveup borderbottom" ng-show="print.spiele" style="height: 100%;padding-bottom: 15px">
+                    <span>Spielinfo:</span>
+                    <div ng-repeat="info in infoOptions">
+                        <input type="radio" style="margin-bottom: 5px;margin-left: 10px" ng-value="info" ng-model="print.spieleInfo"/> {{info}}
+                    </div>
+                    <div>
+                        <input type="radio" style="margin-bottom: 5px;display: inline;margin-left: 10px" ng-value="print.spieleInfo" ng-model="print.spieleInfo"/>
+                        <input class="form-control" ng-model="print.spieleInfo" style="display: inline;width: 90%"/>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Druck Button -->
+        <div class="row" style="margin-top: 20px; margin-left: 10px">
+            <button class="btn pull-right" ng-click="drucken(print,selectedTeams)">Drucken</button>
+        </div>
+    </div>
+
+
+</div>

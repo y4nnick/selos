@@ -25,6 +25,26 @@ class TeamService extends GENERIC_API
     public function afterUpdate($entity){
       //  $entity->setDisplayFields(false);
         $entity->generateSpielerString();
+        $entity->setDisplayFields(false);
+    }
+
+
+    public function zahlungenVorOrt(){
+        $Teams = R::findAll("team");
+
+        $bezahlt = 0;
+        $bezahltCount = 0;
+        foreach($Teams as $team){
+            if($team->bezahltVorort != 0){
+                $bezahltCount++;
+                $bezahlt += $team->bezahltVorort;
+            }
+        }
+
+        $result = array();
+        $result["bezahlt"] = $bezahlt;
+        $result["bezahltCount"] = $bezahltCount;
+        return $result;
     }
 
     public function anwesenheit(){

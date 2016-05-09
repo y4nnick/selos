@@ -20,6 +20,8 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     $scope.currentTeamSave = null;
     $scope.currentTeam = null;
 
+    $scope.editmode = false;
+
     $scope.searchTermSmall = "";
 
     $scope.$watch('searchTerm', function() {
@@ -31,6 +33,7 @@ function eingabeController($scope,team,bewerb,$rootScope) {
         $scope.currentTeam.$update().then(
             //success
             function( value ){
+                console.log(value);
                 swal({
                     title: "Erfolgreich!",
                     text: "Team wurde erfolgreich gespeichert",
@@ -38,7 +41,10 @@ function eingabeController($scope,team,bewerb,$rootScope) {
                     confirmButtonText: "Ok"
                 });
                 $scope.currentTeam = null;
-                $scope.loadTeams();
+                $scope.editmode = false;
+                console.log(value);
+                $scope.storeUpdatedTeam(value);
+               // $scope.loadTeams();
             },
             //error
             function( error ){
@@ -49,6 +55,30 @@ function eingabeController($scope,team,bewerb,$rootScope) {
                 });
             }
         );
+    }
+
+    var BreakException= {};
+    $scope.storeUpdatedTeam = function(team){
+
+        var index = 0;
+        var foundIndex = -1;
+        try{
+            $scope.teams.forEach(function(t){
+                if(t.id == team.id){
+                    foundIndex = index;
+                    throw BreakException;
+                }
+                index++;
+            });
+        }catch (e){
+            if (e!==BreakException) throw e;
+        }
+
+        if(foundIndex != -1){
+            $scope.teams[foundIndex] = team;
+            console.log("found and updated team");
+            console.log( $scope.teams[foundIndex]);
+        }
     }
 
     $scope.selectedCurrentTeam = function(){
@@ -66,6 +96,7 @@ function eingabeController($scope,team,bewerb,$rootScope) {
         $scope.query = team.query(function(data){
             $scope.totalItems = data.length;
             $scope.teams = data;
+            console.log($scope.teams);
         },function(error){
             console.log("error while loading teams: " + error);
             $scope.teams = [];
@@ -133,6 +164,7 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     $scope.performReset = function(){
         $scope.currentTeam = $scope.currentTeamSave;
         $scope.currentTeam = null;
+        $scope.editmode = false;
         $scope.changend = false;
     }
 
@@ -172,4 +204,15 @@ function eingabeController($scope,team,bewerb,$rootScope) {
         });
         return zweiter;
     }
+
+    $scope.bezahltvorort = 0;
+    $scope.updateBezahlungen = function(){
+
+        team.zahlungenVorOrt(function(response){
+            $scope.bezahltvorort = response.bezahlt;
+        },function(response){
+            console.log(response);
+        });
+    }
+    $scope.updateBezahlungen();
 }

@@ -8,12 +8,14 @@ class ownPDF extends FPDF{
     var $offsetX = 0;
     var $offsetY = 0;
 
-    function drawGame($team1, $team2, $bewerb, $gruppe, $info,$printBackground,$offsetX,$offsetY){
+    function drawGame($team1, $team2, $bewerb, $gruppe, $info,$printBackground,$offsetX,$offsetY, $fromCustom = false){
 
         $printBorder = false;
 
-        $team1->setDisplayFields(false);
-        $team2->setDisplayFields(false);
+        if(!$fromCustom){
+            $team1->setDisplayFields(false);
+            $team2->setDisplayFields(false);
+        }
 
         if($printBackground){
             $corePath = realpath(dirname(__FILE__));
@@ -25,7 +27,6 @@ class ownPDF extends FPDF{
 
         $this->SetFont('Arial','B',14);
         $this->SetY($abstandVonObenInfofelder);
-
 
         //Bewerb
         $abstandBewerbFeld = 8;
@@ -45,8 +46,8 @@ class ownPDF extends FPDF{
         $this->SetFont('Arial','B',10);
         $abstandInfoFeld = 123;
         $breiteInfoFeld = 79;
+        $this->SetY($abstandVonObenInfofelder + 3);
         $this->SetX($abstandInfoFeld);
-     //   $this->SetY($abstandVonObenInfofelder + 3);
         $this->MultiCell($breiteInfoFeld,5,utf8_decode($info),$printBorder,"C");
 
 
@@ -65,14 +66,14 @@ class ownPDF extends FPDF{
         $abstandTeam1Feld = 17;
         $breiteTeam1Feld = 79;
         $this->SetX($abstandTeam1Feld);
-        $this->MultiCell($breiteTeam1Feld,$hoeheTeamFelder,utf8_decode($team1->display["Teamname"]),$printBorder,"C");
+        $this->MultiCell($breiteTeam1Feld,$hoeheTeamFelder,utf8_decode($this->getTeamname($team1,$fromCustom)),$printBorder,"C");
 
         //Team 2
         $abstandTeam2Feld = 112;
         $breiteTeam2Feld = 79;
         $this->SetY($abstandVonObenTeamfelder);
         $this->SetX($abstandTeam2Feld);
-        $this->MultiCell($breiteTeam2Feld,$hoeheTeamFelder,utf8_decode($team2->display["Teamname"]),$printBorder,"C");
+        $this->MultiCell($breiteTeam2Feld,$hoeheTeamFelder,utf8_decode($this->getTeamname($team2,$fromCustom)),$printBorder,"C");
 
 
         //
@@ -85,15 +86,15 @@ class ownPDF extends FPDF{
 
         //Team 1
         $this->SetX($abstandTeam1Feld);
-        $this->MultiCell($breiteTeam1Feld,$hoeheSpielerFelder,utf8_decode($this->getSpieler($team1)),$printBorder,"C");
+        $this->MultiCell($breiteTeam1Feld,$hoeheSpielerFelder,utf8_decode($this->getSpieler($team1,$fromCustom)),$printBorder,"C");
 
         //Team 1
         $this->SetY($abstandVonObenSpieler);
         $this->SetX($abstandTeam2Feld);
-        $this->MultiCell($breiteTeam2Feld,$hoeheSpielerFelder,utf8_decode($this->getSpieler($team2)),$printBorder,"C");
+        $this->MultiCell($breiteTeam2Feld,$hoeheSpielerFelder,utf8_decode($this->getSpieler($team2,$fromCustom)),$printBorder,"C");
     }
 
-    function draw6erRasterA3($teams,$bewerb,$gruppe,$printBackground){
+    function draw6erRasterA3($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY,$fromCustom = false){
         $printBorder = false;
 
         if($printBackground){
@@ -133,7 +134,7 @@ class ownPDF extends FPDF{
 
             $this->SetY($abstandObenZeilen  + $x * $zeilenHoehe + 7);
             $this->SetX($abstandLinksZeilen);
-            $this->MultiCell($zeilenBreite,$zeilenTextHoehe,utf8_decode($team->display["Teamname"]),$printBorder,"C");
+            $this->MultiCell($zeilenBreite,$zeilenTextHoehe,utf8_decode($this->getTeamname($team,$fromCustom)),$printBorder,"C");
 
             $this->SetFont('Arial','B',10);
             $this->SetY($abstandObenZeilen + ($zeilenHoehe-$hoeheNamesSpalte) + $x * $zeilenHoehe );
@@ -151,14 +152,14 @@ class ownPDF extends FPDF{
             $this->Rotate(90);
             $this->SetFont('Arial', 'B', 20);
 
-            $this->MultiCell($spaltenHoehe,$zeilenTextHoehe,utf8_decode($team->display["Teamname"]),$printBorder,"C");
+            $this->MultiCell($spaltenHoehe,$zeilenTextHoehe,utf8_decode($this->getTeamname($team,$fromCustom)),$printBorder,"C");
             $x++;
         }
 
         $this->Rotate(0);
     }
 
-    function draw5erRasterA3($teams,$bewerb,$gruppe,$printBackground){
+    function draw5erRasterA3($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY,$fromCustom = false){
         $printBorder = false;
 
         if($printBackground){
@@ -198,7 +199,7 @@ class ownPDF extends FPDF{
 
             $this->SetY($abstandObenZeilen  + $x * $zeilenHoehe + 10);
             $this->SetX($abstandLinksZeilen);
-            $this->MultiCell($zeilenBreite,$zeilenTextHoehe,utf8_decode($team->display["Teamname"]),$printBorder,"C");
+            $this->MultiCell($zeilenBreite,$zeilenTextHoehe,utf8_decode($this->getTeamname($team,$fromCustom)),$printBorder,"C");
 
             $this->SetFont('Arial','B',12);
             $this->SetY($abstandObenZeilen + ($zeilenHoehe-$hoeheNamesSpalte) + $x * $zeilenHoehe );
@@ -216,14 +217,15 @@ class ownPDF extends FPDF{
             $this->Rotate(90);
             $this->SetFont('Arial', 'B', 22);
 
-            $this->MultiCell($spaltenHoehe,$zeilenTextHoehe,utf8_decode($team->display["Teamname"]),$printBorder,"C");
+            $this->MultiCell($spaltenHoehe,$zeilenTextHoehe,utf8_decode($this->getTeamname($team,$fromCustom)),$printBorder,"C");
             $x++;
         }
 
         $this->Rotate(0);
     }
 
-    function draw4erRasterA4($teams,$bewerb,$gruppe,$printBackground){
+    function draw4erRasterA4($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY,$fromCustom = false){
+
         $printBorder = false;
 
         if($printBackground){
@@ -265,12 +267,12 @@ class ownPDF extends FPDF{
         //Zeilen
         $x = 0;
         foreach($teams as $team){
-            $team->setDisplayFields(false);
+            if(!$fromCustom) $team->setDisplayFields(false);
             $this->SetFont('Arial','B',16);
 
             $this->SetY($abstandObenZeilen  + $x * $zeilenHoehe + 7);
             $this->SetX($abstandLinksZeilen);
-            $this->MultiCell($zeilenBreite,$zeilenTextHoehe,utf8_decode($team->display["Teamname"]),$printBorder,"C");
+            $this->MultiCell($zeilenBreite,$zeilenTextHoehe,utf8_decode($this->getTeamname($team,$fromCustom)),$printBorder,"C");
 
             $this->SetFont('Arial','B',8);
             $this->SetY($abstandObenZeilen + ($zeilenHoehe-$hoeheNamesSpalte) + $x * $zeilenHoehe );
@@ -289,15 +291,27 @@ class ownPDF extends FPDF{
             $this->Rotate(90);
             $this->SetFont('Arial', 'B', 16);
 
-            $this->MultiCell($spaltenHoehe,$zeilenTextHoehe,utf8_decode($team->display["Teamname"]),$printBorder,"C");
+            $this->MultiCell($spaltenHoehe,$zeilenTextHoehe,utf8_decode($this->getTeamname($team,$fromCustom)),$printBorder,"C");
             $x++;
         }
 
         $this->Rotate(0);
     }
 
-    private function getSpieler($team){
-        return $team->spieler;
+    private function getSpieler($team,$fromCustom = false){
+        if(!$fromCustom){
+            return $team->spieler;
+        }else{
+            return $team->spieler;
+        }
+    }
+
+    private function getTeamname($team,$fromCustom = false){
+        if(!$fromCustom){
+            return $team->display["Teamname"];
+        }else{
+            return $team->name;
+        }
     }
 
     function __construct($orientation, $unit, $size,$offsetX,$offsetY) {
@@ -339,8 +353,7 @@ class ownPDF extends FPDF{
 
 class printManagerImpl implements printManager{
 
-    public function printGames($teams,$bewerb,$gruppe,$info,$printBackground,$offsetX,$offsetY){
-
+    public function printGames($teams,$bewerb,$gruppe,$info,$printBackground,$offsetX,$offsetY,$fromCustom = false){
         $pdf = new ownPDF("L","mm","A5",$offsetX,$offsetY);
         $pdf->AliasNbPages();
 
@@ -348,14 +361,14 @@ class printManagerImpl implements printManager{
 
         foreach($spiele as $spiel){
             $pdf->AddPage("L");
-            $pdf->drawGame($spiel[0],$spiel[1],$bewerb,$gruppe,$info,$printBackground,$offsetX,$offsetY);
+            $pdf->drawGame($spiel[0],$spiel[1],$bewerb,$gruppe,$info,$printBackground,$offsetX,$offsetY,$fromCustom);
         }
 
         $corePath = realpath(dirname(__FILE__));
         $pdf->Output($corePath."/printA5/".preg_replace('/\s+/', '', $bewerb)."_Gruppe".preg_replace('/\s+/', '', $gruppe)."_".count($teams)."erGruppe_".count($spiele)."Spiele.pdf","F");
     }
 
-    public function printRaster($teamsAssozativ, $bewerb, $gruppe, $format, $printBackground, $rasterGroesse,$offsetX,$offsetY) {
+    public function printRaster($teamsAssozativ, $bewerb, $gruppe, $format, $printBackground, $rasterGroesse,$offsetX,$offsetY,$fromCustom = false) {
 
         $pdf = new ownPDF("L","mm",$format,$offsetX,$offsetY);
         $pdf->AliasNbPages();
@@ -363,14 +376,14 @@ class printManagerImpl implements printManager{
 
         $teams = array();
         foreach($teamsAssozativ as $t){
-            $t->setDisplayFields(false);
+            if(!$fromCustom)$t->setDisplayFields(false);
             $teams[] = $t;
         }
 
         if($format == "A4"){
 
-            if($rasterGroesse == 4){
-                $pdf->draw4erRasterA4($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY);
+            if($rasterGroesse > 4){
+                $pdf->draw4erRasterA4($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY,$fromCustom);
             }else{
                 throw new Exception("Als A4 ist nur ein 4er Raster möglich");
             }
@@ -378,9 +391,9 @@ class printManagerImpl implements printManager{
         }else if($format == "A3"){
 
             if($rasterGroesse == 5){
-                $pdf->draw5erRasterA3($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY);
+                $pdf->draw5erRasterA3($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY,$fromCustom);
             }else if($rasterGroesse == 6){
-                $pdf->draw6erRasterA3($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY);
+                $pdf->draw6erRasterA3($teams,$bewerb,$gruppe,$printBackground,$offsetX,$offsetY,$fromCustom);
             }else{
                 throw new Exception("Als A3 ist nur ein 5er oder 6er Raster möglich");
             }

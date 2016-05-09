@@ -11,7 +11,8 @@ function factory($resource,$rootScope){
                     return angular.toJson(data);
                 }
             },
-            anwesenheit: {method: 'GET', url: $rootScope.url + "api/team/anwesenheit"}
+            anwesenheit: {method: 'GET', url: $rootScope.url + "api/team/anwesenheit"},
+            zahlungenVorOrt: {method: 'GET', url: $rootScope.url + "api/team/zahlungenVorOrt"}
         }
     );
 

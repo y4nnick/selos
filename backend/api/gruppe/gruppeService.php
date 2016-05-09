@@ -11,6 +11,35 @@ class GruppeService extends GENERIC_API
         parent::__construct();
     }
 
+    public function drucken(){
+        $printManager = new printManagerImpl();
+
+        $params = json_decode($this->_request);
+        $printRaster = @$params->raster;
+        $printGames = @$params->spiele;
+        $printBackgroundRaster = @$params->backgroundRaster;
+        $printBackgroundSpiele = @$params->backgroundSpiele;
+        $rasterFormat = @$params->format;
+        $rasterGroesse = @$params->groesse;
+        $info = @$params->info;
+
+        $teams = @$params->teams;
+
+        $bewerb = @$params->bewerb;
+        $gruppenname = @$params->gruppenname;
+
+        $offsetX = 0;
+        $offsetY = 0;
+
+        if($printGames){
+            $printManager->printGames($teams,$bewerb,$gruppenname,$info,$printBackgroundSpiele,$offsetX,$offsetY,true);
+        }
+
+        if($printRaster){
+            $printManager->printRaster($teams,$bewerb,$gruppenname,$rasterFormat,$printBackgroundRaster,$rasterGroesse,$offsetX,$offsetY,true);
+        }
+    }
+
 
 }
 $GruppeService = new GruppeService;

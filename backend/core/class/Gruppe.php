@@ -1,7 +1,6 @@
 <?php
 class Model_Gruppe extends RedBean_SimpleModel{
 
-
     public function drucken($service){
         $printManager = new printManagerImpl();
 
@@ -16,7 +15,6 @@ class Model_Gruppe extends RedBean_SimpleModel{
 
         $offsetX = 0;
         $offsetY = 0;
-
 
         if($printGames){
             $printManager->printGames($this->ownTeam,$this->bewerb->name,$this->name,$info,$printBackgroundSpiele,$offsetX,$offsetY);
