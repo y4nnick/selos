@@ -69,29 +69,35 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
                     if(t.anwesend == true){
                         team.get({id:t.id},function(loadedT){
 
-                            loadedT.bezahlt_vorort = $scope.getZuzahlen(loadedT);
-                            toFinish++;
-                            loadedT.$update().then(
-                                //success
-                                function( value ){
-                                    countFinished++;
+                            var zuZahlen = $scope.getZuzahlen(loadedT);
 
-                                    if((countFinished + countError) == toFinish){
-                                        swal("Erfolgreich gespeichert");
-                                        $scope.loadGemeinschaft();
-                                    }
-                                },
-                                //error
-                                function( error ){
-                                    countError++;
-                                    console.log(error);
+                            if(zuZahlen > 0){
 
-                                    if((countFinished + countError) == toFinish){
-                                        swal("Erfolgreich gespeichert");
-                                        $scope.loadGemeinschaft();
+                                loadedT.bezahlt_vorort = zuZahlen;
+                                toFinish++;
+                                loadedT.$update().then(
+                                    //success
+                                    function( value ){
+                                        countFinished++;
+
+                                        if((countFinished + countError) == toFinish){
+                                            swal("Erfolgreich gespeichert");
+                                            $scope.loadGemeinschaft();
+                                        }
+                                    },
+                                    //error
+                                    function( error ){
+                                        countError++;
+                                        console.log(error);
+
+                                        if((countFinished + countError) == toFinish){
+                                            swal("Erfolgreich gespeichert");
+                                            $scope.loadGemeinschaft();
+                                        }
                                     }
-                                }
-                            );
+                                );
+                            }
+
                         });
                     }
                 });
