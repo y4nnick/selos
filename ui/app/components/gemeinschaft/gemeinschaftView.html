@@ -1,14 +1,85 @@
+<style>
+    .genug {color:lightgreen}
+    .nichtgenug {color:lightcoral}
+    .icon-stack .glyphicon {
+        position: absolute;
+    }
+
+    .normalfontsize{
+        font-size: 100%;
+        margin-bottom: 0px;
+    }
+
+    .greyback{
+        color:darkgrey
+    }
+
+    .blackback{
+        color: black;
+    }
+</style>
+
 <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h1>{{gemeinschaft.name}} <small>{{gemeinschaft.ansprechpartner}}, {{gemeinschaft.handy}}, {{gemeinschaft.email}} </small></h1>
+        <h3 style="display: inline">{{gemeinschaft.ownTeam.length}}. Teams</h3>
+    </div>
+</div>
 
-    <div class="col-md-11 col-md-offset-1">
-        <h1>Grüner Kreis</h1>
+<div class="row" style="margin-top: 5px">
+    <div class="col-md-10 col-md-offset-1">
 
-        <h2>12. Teams</h2>
+        <div style="height:500px;overflow:auto;">
+            <table class="table table-hover table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 5%">ID</th>
+                    <th style="width: 13%">Bewerb</th>
+                    <th style="width: 15%">Teamname</th>
+                    <th style="width: 25%">Spieler</th>
+                    <th style="width: 5%">Betrag</th>
+                    <th style="width: 5%">Bezahlt</th>
+                    <th style="width: 5%">Anwesend</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="team in gemeinschaft.ownTeam">
+                    <td ng-bind-html="team.onlineid | highlight:searchTermSmall"></td>
+                    <td>{{getBewerbName(team.bewerb_id)}}</td>
+                    <td ng-bind-html="team.display['Teamname'] | highlight:searchTermSmall"></td>
+                    <td ng-bind-html="team.spieler  | highlight:searchTermSmall"></th>
+                    <td>{{team.nenngeld_gesamt}}€</th>
+                    <td>
+                        <span ng-class="{nichtgenug:!team.genugBezahlt}" class="glyphicon glyphicon-euro genug" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <checkbox ng-click="team.abgemeldet = !team.anwesend ; team.changed = true" style="margin-bottom: 5px;" ng-true-value="1" ng-false-value="0" ng-model="team.anwesend"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 10px">
+
+    <div class="col-md-6 col-md-offset-1">
+         <span style="font-size: 120%">
+                <label>Bereits bezahlt:</label> {{bereitsBezahlt()}}€
+                <label style="margin-left: 10px">Noch zu zahlen für Anwesende:</label> {{zuZahlen()}}€
+                <button style="margin-left: 10px" class="btn btn-danger" ng-click="alleBezahlen()">Alles bezahlten</button>
+        </span>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="pull-right">
+            <button class="btn" ng-click="setAlleAnwesend()">Alle als anwesend markieren</button>
+            <button class="btn btn-success" ng-click="storeAll()">Speichern</button>
+        </div>
 
 
     </div>
 
-
 </div>
-
-

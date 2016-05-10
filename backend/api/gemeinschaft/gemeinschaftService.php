@@ -11,5 +11,19 @@ class GemeinschaftService extends GENERIC_API
         parent::__construct();
     }
 
+    public function afterGetList($data){
+        foreach($data as $item){
+            foreach($item->ownTeam as $team){
+                $team->setDisplayFields(true);
+            }
+        }
+    }
+
+    public function afterGet($item){
+        foreach($item->ownTeam as $team){
+            $team->setDisplayFields(true);
+        }
+    }
+
 }
 $GemeinschaftService = new GemeinschaftService ;

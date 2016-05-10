@@ -6,148 +6,152 @@ angular.module('rb').controller('gemeinschaftController' , gemeinschaftControlle
     }
 );
 
-function gemeinschaftController($scope,team,bewerb,$rootScope) {
+function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
 
-    $scope.teams = [];
-    $scope.currentTeamSave = null;
-    $scope.currentTeam = null;
-    $scope.editmode = false;
+    $scope.gemeinschaft = {};
+    $scope.changed = false;
 
-    //
-    // Store function
-    //
-
-    $scope.store = function(){
-
-        $scope.currentTeam.$update().then(
-            //success
-            function( value ){
-                swal({
-                    title: "Erfolgreich!",
-                    text: "Team wurde erfolgreich gespeichert",
-                    type: "success",
-                    confirmButtonText: "Ok"
-                });
-                $scope.currentTeam = null;
-                $scope.editmode = false;
-                $scope.storeUpdatedTeam(value);
-               // $scope.loadTeams();
-            },
-            //error
-            function( error ){
-                swal({
-                    title: "Fehler",
-                    text: "Fehler während dem Speichern, " + error.message,
-                    type: "error"
-                });
-            }
-        );
-    }
-
-    var BreakException= {};
-    $scope.storeUpdatedTeam = function(team){
-
-        $scope.setBezahlung(team);
-
-        var index = 0;
-        var foundIndex = -1;
-        try{
-            $scope.teams.forEach(function(t){
-                if(t.id == team.id){
-                    foundIndex = index;
-                    throw BreakException;
-                }
-                index++;
+    $scope.bereitsBezahlt = function(){
+        var betrag = 0;
+        if($scope.gemeinschaft.ownTeam !== undefined){
+            $scope.gemeinschaft.ownTeam.forEach(function(team){
+                betrag += $scope.getBezahltGesamt(team);
             });
-        }catch (e){
-            if (e!==BreakException) throw e;
         }
-
-        if(foundIndex != -1){
-            $scope.teams[foundIndex] = team;
-        }
-    }
-
-    //
-    // Notiz
-    //
-    $scope.showNotiz = function(team){
-        swal({   title: "Notiz",
-            text: "für das Team '" + team.display["Teamname"]+"'",
-            input: "textarea",
-            showCancelButton: true,
-            closeOnConfirm: false,
-            animation: "slide-from-top",
-            inputPlaceholder: "Schreib etwas...",
-            inputValue: team.notiz,
-            inputClass: "normalfontsize"
-        },
-            function(inputValue){
-                if (inputValue === false)
-                    return false;
-
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!");
-                    return false
-                }
-                swal("Nice!", "You wrote: " + inputValue, "success");
-            }
-        );
-    }
-
-
-    //
-    // Search
-    //
-    $scope.searchTerm = "";
-    $scope.searchTermSmall = "";
-    $scope.filter = {
-        nurBezahlte: false,
-        nurNichtBezahlte: false,
-        anwesend:false,
-        nichtanwesend:false,
-        bewerb: null
-    }
-
-    $scope.$watch('searchTerm', function() {
-        $scope.searchTermSmall = $scope.searchTerm.toLowerCase();
-    });
-
-    $scope.search = function(inputTeam){
-
-        var filter = true;
-
-        //Teamname erst ab 2 Zeichen
-        if($scope.searchTermSmall != null && $scope.searchTermSmall.length >= 2){
-            filter = filter && (
-                (inputTeam.onlineid.indexOf($scope.searchTermSmall) !== -1)
-                ||  (angular.lowercase(inputTeam.spieler).indexOf($scope.searchTermSmall) !== -1)
-                ||  (angular.lowercase(inputTeam.display['Teamname']).indexOf($scope.searchTermSmall) !== -1) );
-        }
-
-        //Bezahlt
-        if($scope.filter.nurBezahlte){
-            filter = filter && inputTeam.genugBezahlt;
-        }else if($scope.filter.nurNichtBezahlte){
-            filter = filter && !inputTeam.genugBezahlt;
-        }
-
-        //Anwesenheit
-        if($scope.filter.anwesend){
-            filter = filter && (inputTeam.anwesend == 1);
-        }else if($scope.filter.nichtanwesend){
-            filter = filter && (inputTeam.anwesend != 1);
-        }
-
-        //Bewerb
-        if($scope.filter.bewerb != null){
-            filter = filter && (inputTeam.bewerb_id == $scope.filter.bewerb.id);
-        }
-
-        return filter;
+        return betrag;
     };
 
+    $scope.zuZahlen = function(){
+        var betrag = 0;
+        if($scope.gemeinschaft.ownTeam !== undefined){
+            $scope.gemeinschaft.ownTeam.forEach(function(team){
+                if(team.anwesend == 1){
+                    betrag += $scope.getZuzahlen(team);
+                }
+            });
+        }
 
+        return betrag;
+    };
+
+    $scope.setAlleAnwesend = function(){
+        $scope.gemeinschaft.ownTeam.forEach(function(team){
+
+            if(team.anwesend == false){
+                team.anwesend = true;
+                team.changed = true;
+            }
+
+        });
+
+        $scope.changed = true;
+    }
+
+    $scope.alleBezahlen = function(){
+
+        swal({
+            text: "Willst du wirklich alle Bezahlungen für alle anwesenden Teams eintragen? Betrag: " + $scope.zuZahlen()+"€",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ja'
+        }).then(function(isConfirm) {
+
+            countFinished = 0;
+            countError = 0;
+            toFinish = 0;
+
+            if (isConfirm) {
+
+                $scope.gemeinschaft.ownTeam.forEach(function(t){
+
+                    if(t.anwesend == true){
+                        team.get({id:t.id},function(loadedT){
+
+                            loadedT.bezahlt_vorort = $scope.getZuzahlen(loadedT);
+                            toFinish++;
+                            loadedT.$update().then(
+                                //success
+                                function( value ){
+                                    countFinished++;
+
+                                    if((countFinished + countError) == toFinish){
+                                        swal("Erfolgreich gespeichert");
+                                        $scope.loadGemeinschaft();
+                                    }
+                                },
+                                //error
+                                function( error ){
+                                    countError++;
+                                    console.log(error);
+
+                                    if((countFinished + countError) == toFinish){
+                                        swal("Erfolgreich gespeichert");
+                                        $scope.loadGemeinschaft();
+                                    }
+                                }
+                            );
+                        });
+                    }
+                });
+            }
+        })
+
+
+
+
+    }
+
+
+    var countFinished = 0;
+    var countError = 0;
+    var toFinish = 0;
+    $scope.storeAll = function(){
+
+        countFinished = 0;
+        countError = 0;
+        toFinish = 0;
+
+        $scope.gemeinschaft.ownTeam.forEach(function(t){
+
+            if(t.changed == true){
+
+
+                team.get({id:t.id},function(loadedT){
+
+                    if(loadedT.anwesend != t.anwesend){
+                        loadedT.anwesend = t.anwesend;
+                        toFinish++;
+                        loadedT.$update().then(
+                            //success
+                            function( value ){
+                                countFinished++;
+
+                                if((countFinished + countError) == toFinish){
+                                    swal("Erfolgreich gespeichert");
+                                    $scope.loadGemeinschaft();
+                                }
+                            },
+                            //error
+                            function( error ){
+                                countError++;
+                                console.log(error);
+
+                                if((countFinished + countError) == toFinish){
+                                    swal("Erfolgreich gespeichert");
+                                    $scope.loadGemeinschaft();
+
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+
+        });
+
+    }
 
     //
     // Load basic data
@@ -169,15 +173,31 @@ function gemeinschaftController($scope,team,bewerb,$rootScope) {
     }
 
     $scope.query = null;
-    $scope.loadTeams = function(){
-        $scope.query = team.query(function(data){
-            $scope.teams = data;
-            $scope.teams.forEach(function(team){
-               $scope.setBezahlung(team);
-            });
+    $scope.loadGemeinschaft = function(){
+        $scope.query = gemeinschaft.query(function(data){
+
+            data.forEach(function(g){
+                if(g.onlineid==3){
+
+                    gemeinschaft.get({id:g.id},function(loadedG){
+
+
+                        $scope.gemeinschaft = loadedG;
+
+                        console.log($scope.gemeinschaft);
+
+                        $scope.gemeinschaft.ownTeam.forEach(function(team){
+                            $scope.setBezahlung(team);
+                        });
+
+                    });
+
+                }
+            })
 
         },function(error){
-            $scope.teams = [];
+            console.log(error);
+            $scope.gemeinschaft = {};
         })
     }
 
@@ -186,69 +206,11 @@ function gemeinschaftController($scope,team,bewerb,$rootScope) {
     }
 
     $scope.loadBewerbe();
-    $scope.loadTeams();
-
-
+    $scope.loadGemeinschaft();
 
     //
-    // Bearbeiten Stuff
+    // Helper
     //
-
-    $scope.isInt = function(value) {
-        return !isNaN(value) &&
-            parseInt(Number(value)) == value &&
-            !isNaN(parseInt(value, 10));
-    }
-
-    $scope.onDoubleClick = function(inputTeam){
-        var loadedTeam = team.get({id:inputTeam.id});
-        $scope.currentTeam = loadedTeam;
-        $scope.currentTeamSave = angular.copy(loadedTeam);
-
-        $scope.changend = false;
-    }
-
-    $scope.changend = false;
-    $scope.changedCurrentTeam = function(){
-        if($scope.currentTeam == null || $scope.currentTeamSave == null){
-            return false;
-        }
-        return $scope.changend;
-    }
-
-    $scope.selectedCurrentTeam = function(){
-        return $scope.currentTeam != {};
-    }
-
-    $scope.resetCurrentTeam = function(){
-
-        if(!$scope.changedCurrentTeam()){
-            $scope.performReset();
-        }else{
-            swal({
-                title: "Nicht gespeichert",
-                text: "Willst du die Änderungen wirklich verwerfen?",
-                type: "warning",
-                showCancelButton: true,
-                cancelButtonText: "Zurück",
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Ja, verwerfen!",
-                closeOnConfirm: true },
-                function(){
-                    $scope.performReset();
-                    $scope.$apply();
-                }
-            );
-        }
-    }
-
-    $scope.performReset = function(){
-        $scope.currentTeam = $scope.currentTeamSave;
-        $scope.currentTeam = null;
-        $scope.editmode = false;
-        $scope.changend = false;
-    }
-
     $scope.getBewerbName = function(id){
         if($rootScope.bewerbeIndex !== undefined && $rootScope.bewerbeIndex[id] !== undefined){
             return $rootScope.bewerbeIndex[id].name;
@@ -275,28 +237,4 @@ function gemeinschaftController($scope,team,bewerb,$rootScope) {
         if(team==null)return false;
         return $scope.getBezahltGesamt(team) >= team.nenngeld_gesamt;
     }
-
-    $scope.isZweiterBewerb = function(spieler){
-        var zweiter = false;
-        spieler.ownSpielerinfo.forEach(function(info){
-            if(info.titel == "Zweiter Bewerb" && info.wert != ""){
-                zweiter = true;
-            }
-        });
-        return zweiter;
-    }
-
-    //
-    // Bezahlungen vor Ort
-    //
-
-    $scope.bezahltvorort = 0;
-    $scope.updateBezahlungen = function(){
-        team.zahlungenVorOrt(function(response){
-            $scope.bezahltvorort = response.bezahlt;
-        },function(response){
-            console.log(response);
-        });
-    }
-    $scope.updateBezahlungen();
 }
