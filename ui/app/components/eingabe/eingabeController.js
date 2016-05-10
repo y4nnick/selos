@@ -94,7 +94,7 @@ function eingabeController($scope,team,bewerb,$rootScope) {
 
             if (result !== false) {
                 team.notiz = result;
-                
+
                 team.$update().then(
                     //success
                     function( value ){
@@ -258,12 +258,14 @@ function eingabeController($scope,team,bewerb,$rootScope) {
                 cancelButtonText: "Zurück",
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Ja, verwerfen!",
-                closeOnConfirm: true },
-                function(){
+                closeOnConfirm: true
+            }).then(function(result){
+                if(result){
+
                     $scope.performReset();
                     $scope.$apply();
                 }
-            );
+            });
         }
     }
 
