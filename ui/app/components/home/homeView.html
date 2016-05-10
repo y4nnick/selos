@@ -17,7 +17,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="bewerb in bewerbe ">
+                    <tr ng-repeat="bewerb in bewerbe " ng-if="bewerb.gesamt != 0">
                         <td>{{bewerb.name}}</td>
                         <td>{{bewerb.anwesend}}</td>
                         <td>{{bewerb.gesamt}}</td>
