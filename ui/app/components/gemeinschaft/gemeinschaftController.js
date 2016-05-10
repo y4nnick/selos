@@ -1,18 +1,12 @@
-angular.module('rb').controller('eingabeController' , eingabeController)
-    .filter('highlight', function($sce) {
-        return function(text, phrase) {
-            if (phrase) text = text.replace(new RegExp('('+phrase+')', 'gi'),
-                '<span class="highlighted">$1</span>')
-            return $sce.trustAsHtml(text)
-        }
-    }).filter('myDateFilter', function() {
+angular.module('rb').controller('gemeinschaftController' , gemeinschaftController)
+    .filter('myDateFilter', function() {
         return function(input) {
             return new Date(input);
         };
     }
 );
 
-function eingabeController($scope,team,bewerb,$rootScope) {
+function gemeinschaftController($scope,team,bewerb,$rootScope) {
 
     $scope.teams = [];
     $scope.currentTeamSave = null;
@@ -78,46 +72,27 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     // Notiz
     //
     $scope.showNotiz = function(team){
-        swal(
-            {
-                title: "Notiz",
-                text: "für das Team '" + team.display["Teamname"]+"'",
-                input: "textarea",
-                showCancelButton: true,
-                closeOnConfirm: true,
-                animation: "slide-from-top",
-                inputPlaceholder: "Schreib etwas...",
-                inputValue: team.notiz,
-                inputClass: "normalfontsize"
-            }
-        ).then(function(result){
+        swal({   title: "Notiz",
+            text: "für das Team '" + team.display["Teamname"]+"'",
+            input: "textarea",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "Schreib etwas...",
+            inputValue: team.notiz,
+            inputClass: "normalfontsize"
+        },
+            function(inputValue){
+                if (inputValue === false)
+                    return false;
 
-            if (result !== false) {
-                team.notiz = result;
-                
-                team.$update().then(
-                    //success
-                    function( value ){
-                        swal({
-                            title: "Erfolgreich!",
-                            text: "Notiz wurde erfolgreich gespeichert",
-                            type: "success",
-                            confirmButtonText: "Ok"
-                        });
-                        $scope.storeUpdatedTeam(value);
-                    },
-                    //error
-                    function( error ){
-                        swal({
-                            title: "Fehler",
-                            text: "Fehler während dem Speichern, " + error.message,
-                            type: "error"
-                        });
-                    }
-                );
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something!");
+                    return false
+                }
+                swal("Nice!", "You wrote: " + inputValue, "success");
             }
-
-        });
+        );
     }
 
 

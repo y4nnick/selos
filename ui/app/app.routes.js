@@ -9,7 +9,8 @@ angular.module('rb')
             .state('monitore',  {url: '/monitore',  templateUrl: 'app/components/monitore/monitorView.html',   controller:'monitorController'})
             .state('monitorview',  {url: '/monitorview',  templateUrl: 'app/components/monitorview/monitorviewView.html',   controller:'monitorviewController'})
             .state('custom',    {url: '/custom',    templateUrl: 'app/components/custom/customView.html',      controller:'customController'})
-            .state('druck',     {url: '/druck',     templateUrl: 'app/components/druck/druckView.html',        controller:'druckController'});
+            .state('druck',     {url: '/druck',     templateUrl: 'app/components/druck/druckView.html',        controller:'druckController'})
+            .state('gemeinschaft',     {url: '/gemeinschaft',     templateUrl: 'app/components/gemeinschaft/gemeinschaftView.html',        controller:'gemeinschaftController'});
 
         $urlRouterProvider.otherwise("/home");
         $resourceProvider.defaults.stripTrailingSlashes = false;

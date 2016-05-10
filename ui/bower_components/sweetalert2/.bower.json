@@ -1,0 +1,40 @@
+{
+  "name": "sweetalert2",
+  "homepage": "https://limonte.github.io/sweetalert2/",
+  "authors": [
+    "Tristan Edwards <tristan.edwards@me.com> (http://tristanedwards.me)",
+    "Limon Monte <limon.monte@gmail.com> (http://limonte.github.io)"
+  ],
+  "dependencies": {
+    "es6-promise-polyfill": "*"
+  },
+  "ignore": [
+    "example",
+    "gulpfile.js",
+    "sweetalert.gif"
+  ],
+  "description": "A replacement for JavaScript's popup boxes, supported fork of sweetalert",
+  "main": [
+    "src/sweetalert2.js",
+    "src/sweetalert2.scss"
+  ],
+  "keywords": [
+    "alert",
+    "modal"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:limonte/sweetalert2.git"
+  },
+  "license": "MIT",
+  "version": "2.2.9",
+  "_release": "2.2.9",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.2.9",
+    "commit": "cc5907d8de55ff31deca7c53703d353461791428"
+  },
+  "_source": "https://github.com/limonte/sweetalert2.git",
+  "_target": "*",
+  "_originalSource": "sweetalert2"
+}

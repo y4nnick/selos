@@ -36,7 +36,8 @@
     "angular-cookies": "~1.4.3",
     "ng-busy": "~0.2.0",
     "angular-mocks": "~1.4.3",
-    "sweetalert": "~1.1.0"
+    "sweetalert": "~1.1.0",
+    "sweetalert2": null
   },
   "resolutions": {
     "angular": "~1.4.3"

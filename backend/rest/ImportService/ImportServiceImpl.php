@@ -29,6 +29,7 @@ class ImportServiceImpl
             R::wipe("turnier");
             R::wipe("team");
             R::wipe("bewerb");
+            R::wipe("gemeinschaft");
 
             //Turnier erstellen
             $turnierJson = $json_output->turnier;
@@ -52,6 +53,20 @@ class ImportServiceImpl
                 R::store($Bewerb);
             }
 
+            //Gemeinschaften erstellen
+            $gemeinschaften = array();
+            foreach($json_output->gemeinschaften as $g){
+                $Gemeinschaft = R::dispense("gemeinschaft");
+                $Gemeinschaft->name = $g->name;
+                $Gemeinschaft->ansprechpartner = $g->ansprechpartner;
+                $Gemeinschaft->email = $g->email;
+                $Gemeinschaft->handy = $g->handy;
+                $Gemeinschaft->turnier = $turnier;
+                $Gemeinschaft->onlineid = $g->id;
+                $gemeinschaften[$Gemeinschaft->onlineid] = $Gemeinschaft;
+                R::store($Gemeinschaft);
+            }
+
             //Iteration über alle Anmeldungen
             foreach($json_output->anmeldungen as $anmeldung)
             {
@@ -60,12 +75,12 @@ class ImportServiceImpl
                 $Team->onlineid = $anmeldung->id;
                 $Team->bewerb = $bewerbe[$anmeldung->bewerb];
                 $Team->angemeldet = $anmeldung->angemeldet;
+                $Team->gemeinschaft = ($anmeldung->gemeinschaft!=null)?$gemeinschaften[$anmeldung->gemeinschaft]:null;
 
                 //Bezahlung
                 $bezahlungJson = $anmeldung->bezahlung;
                 $Team->nenngeldGesamt = $bezahlungJson->kosten;
                 $Team->bezahltBetrag = (!empty($bezahlungJson->bezahlt))?$bezahlungJson->bezahlt:0;
-          //      $Team->bezahltBetrag = $bezahlungJson->bezahltBetrag;
 
                 //Konstanten
                 $Team->bezahltVorort = 0;
