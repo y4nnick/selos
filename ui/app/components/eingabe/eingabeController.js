@@ -313,6 +313,20 @@ function eingabeController($scope,team,bewerb,$rootScope) {
         return zweiter;
     }
 
+    $scope.allesBezahlen = function(team){
+
+
+        if(team.bezahlt_vorort.length > 0){
+            team.bezahlt_vorort = parseInt(team.bezahlt_vorort,10) +  parseInt($scope.getZuzahlen(team),10);
+        }else{
+            team.bezahlt_vorort = parseInt($scope.getZuzahlen(team),10);
+        }
+
+        $scope.changend = true;
+        team.anwesend = true;
+        team.abgemeldet = false;
+    }
+
     //
     // Bezahlungen vor Ort
     //

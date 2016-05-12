@@ -29,7 +29,7 @@
 <div class="row" style="margin-top: 5px">
     <div class="col-md-10 col-md-offset-1">
 
-        <div style="height:500px;overflow:auto;">
+        <div style="height:350px;overflow:auto;">
             <table class="table table-hover table-bordered table-striped">
                 <thead>
                 <tr>
@@ -37,9 +37,10 @@
                     <th style="width: 13%">Bewerb</th>
                     <th style="width: 15%">Teamname</th>
                     <th style="width: 25%">Spieler</th>
-                    <th style="width: 5%">Betrag</th>
-                    <th style="width: 5%">Bezahlt</th>
-                    <th style="width: 5%">Anwesend</th>
+                    <th style="width: 3%">Betrag</th>
+                    <th style="width: 3%">Bezahlt</th>
+                    <th style="width: 3%">Anwesend</th>
+                    <th style="width: 3%">Abgemeldet</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,7 +54,10 @@
                         <span ng-class="{nichtgenug:!team.genugBezahlt}" class="glyphicon glyphicon-euro genug" aria-hidden="true"></span>
                     </td>
                     <td>
-                        <checkbox ng-click="team.abgemeldet = !team.anwesend ; team.changed = true" style="margin-bottom: 5px;" ng-true-value="1" ng-false-value="0" ng-model="team.anwesend"/>
+                        <checkbox ng-click="onClickAnwesend(team)" style="margin-bottom: 5px;" ng-true-value="1" ng-false-value="0" ng-model="team.anwesend"/>
+                    </td>
+                    <td>
+                        <checkbox ng-click="team.anwesend = !team.abgemeldet ; team.changed = true" style="margin-bottom: 5px;" ng-true-value="1" ng-false-value="0" ng-model="team.abgemeldet"/>
                     </td>
                 </tr>
                 </tbody>

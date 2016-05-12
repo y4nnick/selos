@@ -39,7 +39,8 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
 
             if(team.anwesend == false){
                 team.anwesend = true;
-                team.changed = true;
+                console.log("in");
+                $scope.onClickAnwesend(team);
             }
 
         });
@@ -126,8 +127,10 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
 
                 team.get({id:t.id},function(loadedT){
 
-                    if(loadedT.anwesend != t.anwesend){
+                    if(loadedT.anwesend != t.anwesend || loadedT.abgemeldet != t.abgemeldet){
                         loadedT.anwesend = t.anwesend;
+                        loadedT.abgemeldet = t.abgemeldet;
+
                         toFinish++;
                         loadedT.$update().then(
                             //success
@@ -156,7 +159,14 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
             }
 
         });
+    }
 
+    $scope.onClickAnwesend = function(team){
+        team.changed = true;
+
+        if(team.anwesend && team.abgemeldet){
+            team.abgemeldet = false;
+        }
     }
 
     //

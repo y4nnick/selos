@@ -1,6 +1,6 @@
 angular.module('rb').controller('gruppenController' , gruppenController);
 
-function gruppenController($scope,$element, dragularService, bewerb,gruppe,$timeout) {
+function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,$timeout) {
 
     $scope.bewerbe = bewerb.query();
     $scope.selBewerb = null;
@@ -192,4 +192,53 @@ function gruppenController($scope,$element, dragularService, bewerb,gruppe,$time
         });
 
     };
+
+
+    //
+    // Notiz
+    //
+    $scope.showNotiz = function(teamInput){
+        swal(
+            {
+                title: "Notiz",
+                text: "für das Team '" + teamInput.display["Teamname"]+"'",
+                input: "textarea",
+                showCancelButton: true,
+                closeOnConfirm: true,
+                animation: "slide-from-top",
+                inputPlaceholder: "Schreib etwas...",
+                inputValue: teamInput.notiz,
+                inputClass: "normalfontsize"
+            }
+        ).then(function(result){
+
+            if (result !== false) {
+
+                team.get({id:teamInput.id},function(loadedT) {
+                    loadedT.notiz = result;
+                    loadedT.$update().then(
+                        //success
+                        function( value ){
+                            swal({
+                                title: "Erfolgreich!",
+                                text: "Notiz wurde erfolgreich gespeichert",
+                                type: "success",
+                                confirmButtonText: "Ok"
+                            });
+                            $scope.loadSelectedBewerb($scope.selBewerb.id);
+                        },
+                        //error
+                        function( error ){
+                            swal({
+                                title: "Fehler",
+                                text: "Fehler während dem Speichern, " + error.message,
+                                type: "error"
+                            });
+                        }
+                    );
+
+                });
+            }
+        });
+    }
 }

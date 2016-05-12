@@ -33,6 +33,19 @@
     .toggle-switch .switch-left  {   background: #4a9a42;height: 28px}
     .toggle-switch .switch-right  {  height: 28px}
 
+    .greyback{
+        color:darkgrey
+    }
+
+    .blackback{
+        color: black;
+    }
+
+    .normalfontsize{
+        font-size: 100%;
+        margin-bottom: 0px;
+    }
+
 </style>
 
 
@@ -184,19 +197,26 @@
                                 <th style="width: 300px">Spieler</th>
                                 <th style="width: 250px">Herkunft</th>
                                 <th style="width: 150px">Handy</th>
-                                <th style="width: 100px">Bezahlt</th>
+                                <th style="width: 50px">Anwesend</th>
+                                <th style="width: 50px">Notiz</th>
                             </tr>
                             </thead>
                             <tbody id="container_{{bewerb.id}}_{{gruppe.id}}" class='containerVertical' style="height: 20px">
-                            <tr ng-if="gruppe.ownTeam.length == 0"><td colspan="6" style="text-align: center" class="text-muted">Keine Teams vorhanden</td></tr>
-                            <tr ng-repeat="team in gruppe.ownTeam" ng-class="{red:team.anwesend=='0'}"> <!--ng-class="{red:team.anwesend=='0'}"-->
-                                <td>{{team.onlineid}}</td>
-                                <td>{{team.display['Teamname']}}</td>
-                                <td>{{team.spieler}}</th>
-                                <td>{{team.display['Herkunft']}}</td>
-                                <td>{{team.display['Handynummer']}}</td>
-                                <td><span ng-if="team.bezahlt" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                            </tr>
+                                <tr ng-if="gruppe.ownTeam.length == 0"><td colspan="6" style="text-align: center" class="text-muted">Keine Teams vorhanden</td></tr>
+                                <tr ng-repeat="team in gruppe.ownTeam" ng-class="{red:team.abgemeldet=='1'}"> <!--ng-class="{red:team.anwesend=='0'}"-->
+                                    <td>{{team.onlineid}}</td>
+                                    <td>{{team.display['Teamname']}}</td>
+                                    <td>{{team.spieler}}</th>
+                                    <td>{{team.display['Herkunft']}}</td>
+                                    <td>{{team.display['Handynummer']}}</td>
+                                    <td>
+                                        <span ng-show="team.anwesend == 1" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                        <span ng-show="team.abgemeldet == 1"><span class="glyphicon glyphicon-alert" style="color: red"></span> <strong>Abgemeldet</strong></span>
+                                    </td>
+                                    <td ng-click="showNotiz(team)">
+                                        <span class="glyphicon glyphicon-align-left greyback" ng-class="{blackback:(team.notiz.length > 0)}" style="cursor: pointer"></span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
