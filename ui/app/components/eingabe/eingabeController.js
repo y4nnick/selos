@@ -131,7 +131,8 @@ function eingabeController($scope,team,bewerb,$rootScope) {
         nurNichtBezahlte: false,
         anwesend:false,
         nichtanwesend:false,
-        bewerb: null
+        bewerb: null,
+        abgemeldet: false
     }
 
     $scope.$watch('searchTerm', function() {
@@ -155,6 +156,10 @@ function eingabeController($scope,team,bewerb,$rootScope) {
             filter = filter && inputTeam.genugBezahlt;
         }else if($scope.filter.nurNichtBezahlte){
             filter = filter && !inputTeam.genugBezahlt;
+        }
+
+        if($scope.filter.abgemeldet){
+            filter = filter && (inputTeam.abgemeldet == 1);
         }
 
         //Anwesenheit

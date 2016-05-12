@@ -48,6 +48,7 @@
             <label><checkbox ng-model="filter.nurNichtBezahlte" ng-change="(filter.nurNichtBezahlte?filter.nurBezahlte = false:1)"/> nicht Bezahlt</label>
             <label><checkbox style="margin-left: 20px" ng-model="filter.anwesend" ng-change="(filter.anwesend?filter.nichtanwesend = false:1)"/> Anwesend</label>
             <label><checkbox ng-model="filter.nichtanwesend" ng-change="(filter.nichtanwesend?filter.anwesend = false:1)"/> nicht Anwesend</label>
+            <label><checkbox style="margin-left: 20px" ng-model="filter.abgemeldet"/> Nur Abgemeldete</label>
         </div>
 
         <!-- reset -->
@@ -100,7 +101,8 @@
                         <td>{{team.display['Handynummer']}}</td>
                         <td>
                             <span ng-class="{nichtgenug:!team.genugBezahlt}" class="glyphicon glyphicon-euro genug" aria-hidden="true"></span>
-                            <span ng-class="{'glyphicon-ok genug':(team.anwesend == 1),'glyphicon-remove nichtgenug':(team.anwesend != 1)}" class="glyphicon glyphicon-ok genug" aria-hidden="true"></span>
+                            <span ng-if="team.abgemeldet != 1" ng-class="{'glyphicon-ok genug':(team.anwesend == 1),'glyphicon-remove nichtgenug':(team.anwesend != 1)}" class="glyphicon glyphicon-ok genug" aria-hidden="true"></span>
+                            <span title="Abgemeldet" ng-show="team.abgemeldet == 1"><span class="glyphicon glyphicon-alert" style="color: red"></span></span>
                         </td>
                         <td ng-click="showNotiz(team)">
                             <span class="glyphicon glyphicon-align-left greyback" ng-class="{blackback:(team.notiz.length > 0)}" style="cursor: pointer"></span>

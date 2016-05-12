@@ -7,6 +7,15 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
     $scope.activeTabIndex = 0;
     $scope.active = [];
 
+    $scope.infoOptions = [
+        "Ein Satz auf 15",
+        "Ein Satz auf 21",
+        "Zwei gespielte Sätze auf 15",
+        "Zwei gespielte Sätze auf 21",
+        "Zwei gewonnen Sätze auf 15, 3. Satz auf 15",
+        "Zwei gewonnen Sätze auf 21, 3. Satz auf 15",
+    ]
+
     $scope.res = null;
     $scope.storeSelectedBewerb = function(){
         if($scope.res == null){
@@ -23,6 +32,23 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
 
         if($scope.selBewerb.ownGruppe !== undefined){
             $scope.selBewerb.ownGruppe.forEach(function(gruppeIn){
+
+                gruppeIn.print = {
+                    raster:false,
+                    rasterBackground:true,
+                    rasterblatt: {
+                        options: ['A3','A4'],
+                        selected: 'A3'
+                    },
+                    rastergroesse: {
+                        options: ['4','5','6'],
+                        selected: '5'
+                    },
+                    spiele:false,
+                    spieleBackground:true,
+                    spieleInfo: "Ein Satz auf 21"
+                };
+
                 $timeout(function(){
                     $scope.$apply(function(){
                         var container = document.querySelector('#container_'+$scope.selBewerb.id+'_'+gruppeIn.id);
@@ -60,6 +86,29 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
     //
     // Drucken
     //
+    $scope.druckenSingle = function(gruppe){
+        console.log("in");
+
+        gPrint = gruppe.print;
+
+        $scope.drucken(
+            gruppe,
+            gPrint.raster,
+            gPrint.spiele,
+            gPrint.rasterBackground,
+            gPrint.spieleBackground,
+            gPrint.rasterblatt.selected,
+            gPrint.rastergroesse.selected,
+            gPrint.spieleInfo
+        );
+
+        swal({
+            title: "Erfolg",
+            text: "Druckauftrag gesendet",
+            type: "success"
+        });
+    }
+
     $scope.druckAll = function(print){
         $scope.selBewerb.ownGruppe.forEach(function(gruppeIn){
             $scope.drucken(
@@ -114,7 +163,7 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
 
     $scope.print = {
         raster:false,
-        rasterBackground:false,
+        rasterBackground:true,
         rasterblatt: {
             options: ['A3','A4'],
             selected: 'A3'
@@ -124,9 +173,10 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
             selected: '5'
         },
         spiele:false,
-        spieleBackground:false,
+        spieleBackground:true,
         spieleInfo: "Ein Satz auf 21"
     }
+
 
     $scope.selectedBlatt = function(blatt){
         if(blatt == "A3"){

@@ -19,7 +19,6 @@ function homeController($scope, team,$interval) {
                     $scope.teilnehmer += teil + "\n";
                 })
 
-
             })
         })
 

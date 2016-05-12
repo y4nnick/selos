@@ -59,6 +59,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h2>{{selBewerb.name}} <small>{{selBewerb.teams_anwesend}}/{{selBewerb.teams}} Teams anwesend</small></h2>
+                    <label><checkbox ng-model="einzelnDrucken"></checkbox> Einzeln drucken</label>
                 </div>
             </div>
 
@@ -93,12 +94,12 @@
                 <!-- Druck Überschrift -->
                 <div class="row" >
                     <div class="col-md-12">
-                        <h3>Drucken</h3>
+                        <h3>Drucken gesamt</h3>
                     </div>
                 </div>
 
                 <!-- Drucken -->
-                <div class="row">
+                <div class="row" ng-hide="einzelnDrucken">
 
                     <!-- Raster Drucken -->
                     <div class="col-md-4">
@@ -138,9 +139,15 @@
                             <toggle-switch class="pull-right" ng-model="print.spieleBackground"></toggle-switch>
                         </div>
 
-                        <div class="box moveup borderbottom" ng-show="print.spiele">
-                            <span>Info</span>
-                            <input style="width: 200px; display: inline" class="form-control pull-right" ng-model="print.spieleInfo"/>
+                        <div class="box moveup borderbottom" ng-show="print.spiele" style="height: 100%;padding-bottom: 15px">
+                            <span>Spielinfo:</span>
+                            <div ng-repeat="info in infoOptions">
+                                <input type="radio" style="margin-bottom: 5px;margin-left: 10px" ng-value="info" ng-model="print.spieleInfo"/> {{info}}
+                            </div>
+                            <div>
+                                <input type="radio" style="margin-bottom: 5px;display: inline;margin-left: 10px" ng-value="print.spieleInfo" ng-model="print.spieleInfo"/>
+                                <input class="form-control" ng-model="print.spieleInfo" style="display: inline;width: 90%"/>
+                            </div>
                         </div>
 
                     </div>
@@ -164,26 +171,71 @@
                 </div>
 
                 <!-- Einzeln Drucken -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div ng-show="einzelnDrucken">
-                            <form class="form-inline" style="display: inline;">
-                                <button class="btn" style="display: inline;" ng-click="drucken(gruppe,gruppe.printRaster,gruppe.printSpiele,gruppe.printRasterBackground,gruppe.printSpieleBackground)">Drucken</button>
-                            </form>
 
-                            <form class="form-inline" style="display: inline;">
-                                <div class="btn-group">
-                                    <label class="btn btn-primary" ng-model="gruppe.printRaster" uib-btn-checkbox>Raster</label>
-                                    <label class="btn btn-primary" ng-model="gruppe.printSpiele" uib-btn-checkbox>Spiele</label>
-                                </div>
-                                <div class="btn-group" style="display: inline;">
-                                    <label class="btn btn-primary" ng-model="gruppe.printRasterBackground" uib-btn-checkbox>Raster Hintergrund</label>
-                                    <label class="btn btn-primary" ng-model="gruppe.printSpieleBackground" uib-btn-checkbox>Spiele Hintergrund</label>
-                                </div>
-                                <input class="form-control" style="display: inline;" size="30" type="text" ng-model="gruppe.printInfo" placeholder="Info">
-                            </form>
+
+
+
+
+
+                <!-- Drucken -->
+                <div class="row" ng-show="einzelnDrucken">
+
+                    <!-- Raster Drucken -->
+                    <div class="col-md-4">
+
+                        <div class="box first">
+                            <span>Raster</span>
+                            <toggle-switch class="pull-right" ng-model="gruppe.print.raster" ></toggle-switch>
                         </div>
+
+                        <div class="box moveup noborder" ng-show="gruppe.print.raster">
+                            <span>Hintergrund</span>
+                            <toggle-switch class="pull-right" ng-model="gruppe.print.rasterBackground"></toggle-switch>
+                        </div>
+
+                        <div class="box moveup noborder" ng-show="gruppe.print.raster">
+                            <span>Blatt Größe</span>
+                            <select ng-change="selectedBlatt(gruppe.print.rasterblatt.selected)" style="width: 100px; display: inline" class="form-control pull-right" ng-model="gruppe.print.rasterblatt.selected" ng-options="o as o for o in gruppe.print.rasterblatt.options"></select>
+                        </div>
+
+                        <div class="box moveup borderbottom" ng-show="gruppe.print.raster" >
+                            <span>Raster Größe</span>
+                            <select ng-disabled="(gruppe.print.rasterblatt.selected == 'A4')" style="width: 100px; display: inline" class="form-control pull-right" ng-model="gruppe.print.rastergroesse.selected" ng-options="o as o for o in gruppe.print.rastergroesse.options"></select>
+                        </div>
+
                     </div>
+
+                    <!-- Spiele Drucken -->
+                    <div class="col-md-4">
+
+                        <div class="box first">
+                            <span>Spiele</span>
+                            <toggle-switch class="pull-right" ng-model="gruppe.print.spiele"></toggle-switch>
+                        </div>
+
+                        <div class="box moveup noborder" ng-show="gruppe.print.spiele">
+                            <span>Hintergrund</span>
+                            <toggle-switch class="pull-right" ng-model="gruppe.print.spieleBackground"></toggle-switch>
+                        </div>
+
+                        <div class="box moveup borderbottom" ng-show="gruppe.print.spiele" style="height: 100%;padding-bottom: 15px">
+                            <span>Spielinfo:</span>
+                            <div ng-repeat="info in infoOptions">
+                                <input type="radio" style="margin-bottom: 5px;margin-left: 10px" ng-value="info" ng-model="gruppe.print.spieleInfo"/> {{info}}
+                            </div>
+                            <div>
+                                <input type="radio" style="margin-bottom: 5px;display: inline;margin-left: 10px" ng-value="gruppe.print.spieleInfo" ng-model="gruppe.print.spieleInfo"/>
+                                <input class="form-control" ng-model="gruppe.print.spieleInfo" style="display: inline;width: 90%"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Druck Button -->
+                    <div class="col-md-4">
+                        <button class="btn" ng-click="druckenSingle(gruppe)">Drucken</button>
+                    </div>
+
                 </div>
 
                 <!-- Teams einer Gruppe -->
