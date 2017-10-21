@@ -87,7 +87,6 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
     // Drucken
     //
     $scope.druckenSingle = function(gruppe){
-        console.log("in");
 
         gPrint = gruppe.print;
 
@@ -99,7 +98,8 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
             gPrint.spieleBackground,
             gPrint.rasterblatt.selected,
             gPrint.rastergroesse.selected,
-            gPrint.spieleInfo
+            gPrint.spieleInfo,
+            gPrint.neuesDesign
         );
 
         swal({
@@ -119,7 +119,8 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
                 print.spieleBackground,
                 print.rasterblatt.selected,
                 print.rastergroesse.selected,
-                print.spieleInfo
+                print.spieleInfo,
+                print.neuesDesign
             )
         });
         swal({
@@ -129,7 +130,7 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
         });
     }
 
-    $scope.drucken = function(gr,printRaster,printSpiele,rasterBack,spieleBack,format,groesse,info){
+    $scope.drucken = function(gr,printRaster,printSpiele,rasterBack,spieleBack,format,groesse,info,neuesDesign){
 
         gruppe.drucken({
             id:gr.id,
@@ -139,7 +140,8 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
             backgroundSpiele:spieleBack,
             format:format,
             groesse:groesse,
-            info:info
+            info:info,
+            neuesDesign:neuesDesign
         },function(gruppeLoaded){
             swal({
                 title: "Erfolg",
@@ -166,15 +168,16 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
         rasterBackground:true,
         rasterblatt: {
             options: ['A3','A4'],
-            selected: 'A3'
+            selected: 'A4'
         },
         rastergroesse: {
             options: ['4','5','6'],
-            selected: '5'
+            selected: '4'
         },
         spiele:false,
         spieleBackground:true,
-        spieleInfo: "Ein Satz auf 21"
+        spieleInfo: "Ein Satz auf 21",
+        neuesDesign: true
     }
 
 
@@ -191,7 +194,7 @@ function gruppenController($scope,$element,team, dragularService, bewerb,gruppe,
         }
     }
 
-    $scope.selectedBlatt("A3");
+    $scope.selectedBlatt("A4");
 
     //
     // Auslosen

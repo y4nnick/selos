@@ -28,4 +28,8 @@ interface printManager {
      * @return mixed
      */
     public function printRaster($teams,$bewerb,$gruppe,$format, $printBackground,$rasterGroesse,$offsetX,$offsetY);
+
+
+    public function printRasterNeu($teams,$bewerb,$gruppe,$info,$printBackground,$offsetX,$offsetY,$fromCustom = false);
+
 }

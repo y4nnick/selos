@@ -160,6 +160,8 @@ function eingabeController($scope,team,bewerb,$rootScope) {
 
         if($scope.filter.abgemeldet){
             filter = filter && (inputTeam.abgemeldet == 1);
+        }else{
+            filter = filter && (inputTeam.abgemeldet != 1);
         }
 
         //Anwesenheit

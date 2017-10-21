@@ -20,17 +20,18 @@ function druckController($scope, team,bewerb,gruppe) {
         rasterBackground: true,
         rasterblatt: {
             options: ['A3', 'A4'],
-            selected: 'A3'
+            selected: 'A4'
         },
         rastergroesse: {
             options: ['4', '5', '6'],
-            selected: '5'
+            selected: '4'
         },
         spiele: true,
         spieleBackground: true,
         spieleInfo: "",
         bewerb: "",
-        gruppenname: ""
+        gruppenname: "",
+        neuesDesign: true
     }
 
 
@@ -104,7 +105,8 @@ function druckController($scope, team,bewerb,gruppe) {
             backgroundSpiele:   opt.spieleBackground,
             format:             opt.rasterblatt.selected,
             groesse:            opt.rastergroesse.selected,
-            info:               opt.spieleInfo
+            info:               opt.spieleInfo,
+            neuesDesign:        opt.neuesDesign
         },function(result){
             swal({
                 title: "Erfolg",
@@ -142,5 +144,9 @@ function druckController($scope, team,bewerb,gruppe) {
         }
 
         return found;
+    }
+
+    $scope.resetTeams = function(){
+        $scope.selectedTeams = [];
     }
 }

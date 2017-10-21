@@ -141,7 +141,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <h2>Nenngeld</h2>
+                <h2>Nenngeld <small ng-show="currentTeam.nachmeldung == 1">Nachmeldung</small></h2>
             </div>
 
             <div class="row">
@@ -150,6 +150,7 @@
                     <label>{{spieler.vorname}} {{spieler.nachname}} <i ng-show="isZweiterBewerb(spieler)" class="fa fa-hand-peace-o" title="Zweiter Bewerb des Spielers"></i></label>
                     <p>Nenngeld: {{spieler.nenngeld}}€</p>
                     <p>Kaution: {{spieler.kaution}}€</p>
+                    <p ng-show="currentTeam.nachmeldung == 1 && currentTeam.nachnenngebuehr_eingetragen != 1 ">Nachnenngebühr: 5€</p>
                 </div>
 
                 <div class="form-group col-md-2">

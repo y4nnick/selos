@@ -75,12 +75,24 @@ class ImportServiceImpl
                 $Team->onlineid = $anmeldung->id;
                 $Team->bewerb = $bewerbe[$anmeldung->bewerb];
                 $Team->angemeldet = $anmeldung->angemeldet;
+
+                if($anmeldung->notiz != null && $anmeldung->notiz != "" && !empty($anmeldung->notiz)){
+                    $Team->notiz = "Online Notiz: " . $anmeldung->notiz;
+                }
+
+                $Team->nachmeldung = $anmeldung->nachmeldung;
+                $Team->nachnenngebuehrEingetragen = $anmeldung->nachnenngebuehrEingetragen;
                 $Team->gemeinschaft = ($anmeldung->gemeinschaft!=null)?$gemeinschaften[$anmeldung->gemeinschaft]:null;
 
                 //Bezahlung
                 $bezahlungJson = $anmeldung->bezahlung;
                 $Team->nenngeldGesamt = $bezahlungJson->kosten;
+                $Team->kautionGesamt = $bezahlungJson->kaution;
                 $Team->bezahltBetrag = (!empty($bezahlungJson->bezahlt))?$bezahlungJson->bezahlt:0;
+
+                if($Team->nachmeldung && !$Team->nachnenngebuehrEingetragen){
+                    $Team->nenngeldGesamt += 10;
+                }
 
                 //Konstanten
                 $Team->bezahltVorort = 0;

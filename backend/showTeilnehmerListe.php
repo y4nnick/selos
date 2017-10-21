@@ -94,13 +94,19 @@ $tArray = [];
 
 foreach($teilnehmer as $t){
 
+   // echo $t->team->gemeinschaft_id."<br>";
+
+    if($t->team->gemeinschaft_id == 1){
+        continue;
+    }
+
     $t->vorname = trim($t->vorname);
     $t->nachname = trim($t->nachname);
 
    /* echo "---------------------<br>";
     echo "t_Vorname: ".$t->vorname."<br>";
     echo "t_Nachname: ".$t->nachname."<br>";*/
-    
+
     $vorhanden = false;
 
     foreach($tArray as $inner){

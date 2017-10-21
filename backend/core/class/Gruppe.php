@@ -12,6 +12,7 @@ class Model_Gruppe extends RedBean_SimpleModel{
         $rasterFormat = @$params->format;
         $rasterGroesse = @$params->groesse;
         $info = @$params->info;
+        $neuesDesign = @$params->neuesDesign;
 
         $offsetX = 0;
         $offsetY = 0;
@@ -20,9 +21,11 @@ class Model_Gruppe extends RedBean_SimpleModel{
             $printManager->printGames($this->ownTeam,$this->bewerb->name,$this->name,$info,$printBackgroundSpiele,$offsetX,$offsetY);
         }
 
-        if($printRaster){
-            $printManager->printRaster($this->ownTeam,$this->bewerb->name,$this->name,$rasterFormat,$printBackgroundRaster,$rasterGroesse,$offsetX,$offsetY);
+        if($neuesDesign){
+           $printManager->printRasterNeu($this->ownTeam,$this->bewerb->name,$this->name,$info,$rasterFormat,$printBackgroundRaster,$rasterGroesse,$offsetX,$offsetY);
         }
+
+        $printManager->printRaster($this->ownTeam,$this->bewerb->name,$this->name,$rasterFormat,$printBackgroundRaster,$rasterGroesse,$offsetX,$offsetY);
     }
 
     public function getTeamNames(){

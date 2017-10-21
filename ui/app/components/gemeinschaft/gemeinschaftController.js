@@ -34,24 +34,33 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
         return betrag;
     };
 
+    $scope.zuZahlenOhneKaution = function(){
+        var betrag = 0;
+        if($scope.gemeinschaft.ownTeam !== undefined){
+            $scope.gemeinschaft.ownTeam.forEach(function(team){
+                if(team.anwesend == 1){
+                    betrag += $scope.getZuzahlenOhneKaution(team);
+                }
+            });
+        }
+
+        return betrag;
+    };
+
     $scope.setAlleAnwesend = function(){
         $scope.gemeinschaft.ownTeam.forEach(function(team){
-
             if(team.anwesend == false){
                 team.anwesend = true;
-                console.log("in");
                 $scope.onClickAnwesend(team);
             }
-
         });
-
         $scope.changed = true;
     }
 
     $scope.alleBezahlen = function(){
 
         swal({
-            text: "Willst du wirklich alle Bezahlungen für alle anwesenden Teams eintragen? Betrag: " + $scope.zuZahlen()+"€",
+            text: "Willst du wirklich alle Bezahlungen für alle anwesenden Teams eintragen? Es wird der volle bezahlte Betrag im System eingetragen: " + $scope.zuZahlen()+"€, zu zahlen ist allerdings nur der Betrag ohne Kautiion " + $scope.zuZahlenOhneKaution()+"€",
             type: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -104,10 +113,6 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
                 });
             }
         })
-
-
-
-
     }
 
 
@@ -193,7 +198,7 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
         $scope.query = gemeinschaft.query(function(data){
 
             data.forEach(function(g){
-                if(g.onlineid==3){
+                if(g.onlineid==8){
 
                     gemeinschaft.get({id:g.id},function(loadedG){
 
@@ -245,8 +250,12 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
 
     $scope.getZuzahlen = function(team){
         if(team == null) return 0;
-
         return team.nenngeld_gesamt - $scope.getBezahltGesamt(team);
+    }
+
+    $scope.getZuzahlenOhneKaution = function(team){
+        if(team == null) return 0;
+        return team.nenngeld_gesamt - $scope.getBezahltGesamt(team) - team.kaution_gesamt;
     }
 
     $scope.genugBezahlt = function(team){

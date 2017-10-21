@@ -22,6 +22,7 @@ class GruppeService extends GENERIC_API
         $rasterFormat = @$params->format;
         $rasterGroesse = @$params->groesse;
         $info = @$params->info;
+        $neuesDesign = @$params->neuesDesign;
 
         $teams = @$params->teams;
 
@@ -36,6 +37,14 @@ class GruppeService extends GENERIC_API
         }
 
         if($printRaster){
+
+            if($neuesDesign){
+
+                $printManager->printRasterNeu($teams,$bewerb,$gruppenname,$info,$printBackgroundRaster,$offsetX,$offsetY,true);
+
+               // $printManager->printRasterNeu($teams,$bewerb,$gruppenname,$rasterFormat,$printBackgroundRaster,$rasterGroesse,$offsetX,$offsetY,true);
+            }
+
             $printManager->printRaster($teams,$bewerb,$gruppenname,$rasterFormat,$printBackgroundRaster,$rasterGroesse,$offsetX,$offsetY,true);
         }
     }

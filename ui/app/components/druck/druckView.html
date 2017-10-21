@@ -96,6 +96,8 @@
             </tr>
             </tbody>
         </table>
+
+        <button ng-if="selectedTeams.length > 0" ng-click="resetTeams()" class="btn">Reset</button>
     </div>
 
 
@@ -126,6 +128,11 @@
                     <select ng-disabled="(print.rasterblatt.selected == 'A4')" style="width: 100px; display: inline" class="form-control pull-right" ng-model="print.rastergroesse.selected" ng-options="o as o for o in print.rastergroesse.options"></select>
                 </div>
 
+                <div class="box moveup borderbottom" ng-show="print.raster" >
+                    <span>Neues Design</span>
+                    <toggle-switch class="pull-right" ng-model="print.neuesDesign"></toggle-switch>
+                </div>
+
             </div>
 
             <!-- Spiele Drucken -->
@@ -141,7 +148,7 @@
                     <toggle-switch class="pull-right" ng-model="print.spieleBackground"></toggle-switch>
                 </div>
 
-                <div class="box moveup borderbottom" ng-show="print.spiele" style="height: 100%;padding-bottom: 15px">
+                <div class="box moveup borderbottom" ng-show="print.spiele || print.raster" style="height: 100%;padding-bottom: 15px">
                     <span>Spielinfo:</span>
                     <div ng-repeat="info in infoOptions">
                         <input type="radio" style="margin-bottom: 5px;margin-left: 10px" ng-value="info" ng-model="print.spieleInfo"/> {{info}}
