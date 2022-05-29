@@ -10,6 +10,22 @@ class Model_Team extends RedBean_SimpleModel{
         //TODO make configable
         $displayFields = array("Teamname","Herkunft","Handynummer");
 
+       /* foreach($displayFields as $field){
+
+            $val = "";
+
+            switch($field){
+                case "Teamname": $val = $this->teamname;
+            }
+
+            $display = array();
+            $display["titel"] = $field;
+            $display["wert"] = $val;
+            $fields[] = $display;
+
+            $fields[$field] = $val;
+        }*/
+
         $fields = array();
         foreach($this->ownTeaminfo as $info){
             if(in_array($info->titel,$displayFields)){

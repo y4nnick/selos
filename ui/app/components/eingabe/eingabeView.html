@@ -60,7 +60,8 @@
 
     <div class="row" style="margin-top: 10px">
         <div class="col-md-6" style="margin-top: 8px">
-            <p class="text-muted" style="font-size: 120%; display: inline">{{results.length }}. Teams gefunden</p>
+            <p class="text-muted" style="font-size: 120%; display: inline" ng-if="!loadingTeams">{{results.length }}. Teams gefunden</p>
+            <p class="text-muted" style="font-size: 120%; display: inline" ng-if="loadingTeams"><i class="fa fa-spinner fa-spin fa-fw"></i> Teams werden geladen</p>
         </div>
 
         <!-- Vor Ort bezahlt -->
@@ -68,7 +69,7 @@
             <div class="pull-right" style="">
                 <label>Vor Ort bezahlt: </label>
                 <span>{{bezahltvorort}}€</span>
-                <button class="btn" ng-click="updateBezahlungen()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                <button class="btn btn-primary" ng-click="updateBezahlungen()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
             </div>
         </div>
     </div>
@@ -179,7 +180,7 @@
             </div>
 
             <div class="form-group">
-                <p><button ng-click="editmode = true" class="btn">Bearbeiten</button></p>
+                <p><button ng-click="editmode = true" class="btn btn-primary">Bearbeiten</button></p>
             </div>
         </div>
         <div class="col-md-6">

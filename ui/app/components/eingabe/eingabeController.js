@@ -188,7 +188,7 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     $scope.loadBewerbe = function(){
         bewerb.query(function(data){
             $rootScope.bewerbe = [];
-            $rootScope.bewerbeIndex = []
+            $rootScope.bewerbeIndex = [];
 
             data.forEach(function(entry){
                 $rootScope.bewerbe.push(entry);
@@ -201,14 +201,19 @@ function eingabeController($scope,team,bewerb,$rootScope) {
     }
 
     $scope.query = null;
+    $scope.loadingTeams = false;
     $scope.loadTeams = function(){
+
+        $scope.loadingTeams = true;
         $scope.query = team.query(function(data){
+            $scope.loadingTeams = false;
             $scope.teams = data;
             $scope.teams.forEach(function(team){
                $scope.setBezahlung(team);
             });
 
         },function(error){
+            $scope.loadingTeams = false;
             $scope.teams = [];
         })
     }

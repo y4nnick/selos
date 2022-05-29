@@ -196,24 +196,21 @@ function gemeinschaftController($scope,team,bewerb,gemeinschaft,$rootScope) {
     $scope.query = null;
     $scope.loadGemeinschaft = function(){
         $scope.query = gemeinschaft.query(function(data){
-
+console.log("in");
+            console.log(data);
             data.forEach(function(g){
-                if(g.onlineid==8){
-
-                    gemeinschaft.get({id:g.id},function(loadedG){
+                gemeinschaft.get({id:g.id},function(loadedG){
 
 
-                        $scope.gemeinschaft = loadedG;
+                    $scope.gemeinschaft = loadedG;
 
-                        console.log($scope.gemeinschaft);
+                    console.log($scope.gemeinschaft);
 
-                        $scope.gemeinschaft.ownTeam.forEach(function(team){
-                            $scope.setBezahlung(team);
-                        });
-
+                    $scope.gemeinschaft.ownTeam.forEach(function(team){
+                        $scope.setBezahlung(team);
                     });
 
-                }
+                });
             })
 
         },function(error){
